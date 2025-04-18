@@ -5,12 +5,13 @@ spring:
   application:
     name: API-GATEWAY
 
-  eureka:
-    instance:
-      hostname: http://localhost
-    client:
-      register-with-eureka: true
-      fetch-registry: true
-      service-url:
-        defaultZone: ${spring.eureka.instance.hostname}:8761/eureka/
-        cache-refresh-interval: 10
+eureka:
+  instance:
+    hostname: http://localhost
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${eureka.instance.hostname}:8761/eureka/
+      cache-refresh-interval: 10
