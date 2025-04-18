@@ -7,6 +7,7 @@ import jakarta.persistence.OneToMany;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 
 @Getter
@@ -25,6 +26,6 @@ public class UserDetails {
     private String profilePicture;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Address address; //One user can have multiple addresses like current, permanent, office etc.
+    private Set<Address> addresses; //One user can have multiple addresses like current, permanent, office etc.
 
 }

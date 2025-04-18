@@ -1,22 +1,23 @@
 server:
   port: 8084
 
+eureka:
+  instance:
+    hostname: http://localhost
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${eureka.instance.hostname}:8761/eureka/
+      cache-refresh-interval: 10
+
 spring:
     application:
         name: USER-SERVICE
 
-    eureka:
-        instance:
-        hostname: http://localhost
-        client:
-        register-with-eureka: true
-        fetch-registry: true
-        service-url:
-            defaultZone: ${spring.eureka.instance.hostname}:8761/eureka/
-            cache-refresh-interval: 10
-
     datasource:
-      url: jdbc:postgresql://localhost:5432/
+      url: jdbc:postgresql://localhost:5432/bankingDB?createDatabaseIfNotExist=true&useSSL=false
       username: postgres
       password: System@25
       driver-class-name: org.postgresql.Driver
