@@ -1,9 +1,6 @@
 package com.github.nits42.userservice.entities;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -20,7 +17,9 @@ public class UserDetails {
 
     private String firstName;
     private String lastName;
-    private String phoneNumber;
+
+    @Column(unique = true)
+    private Integer phoneNumber;
     private LocalDate dateOfBirth;
     private String aboutMe;
     private String profilePicture;
