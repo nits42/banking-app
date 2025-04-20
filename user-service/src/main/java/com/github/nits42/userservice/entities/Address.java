@@ -14,12 +14,12 @@ import lombok.*;
 @AllArgsConstructor
 public class Address extends BaseEntity {
 
-    private String HouseNumber;
+    private String houseNumber;
     private String streetName;
     private String city;
     private String state;
     private String country;
-    private String postalCode;
+    private Integer postalCode;
     private String landmark;
 
     @Enumerated(EnumType.STRING)

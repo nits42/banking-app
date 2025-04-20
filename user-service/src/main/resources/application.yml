@@ -29,3 +29,19 @@ spring:
         hibernate:
           dialect: org.hibernate.dialect.PostgreSQLDialect
           format_sql: true
+
+openapi:
+  service:
+    title: user-service doc
+    contact: nitinkumar@javaverse.com
+    version: 1.0.0
+    license: 1.0.0
+    description: This is User Service, which is responsible for managing user's related operations
+    url: http://localhost:8082 # api gateway url
+    terms-of-service: http://localhost:8082
+
+springdoc:
+  api-docs:
+    path: /user-service/v3/api-docs
+  swagger-ui:
+    path: /user-service/swagger-ui.html

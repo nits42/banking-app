@@ -8,7 +8,6 @@ import com.github.nits42.userservice.enums.Status;
 import com.github.nits42.userservice.exceptions.BankingAppUserServiceException;
 import com.github.nits42.userservice.repository.UserRepository;
 import com.github.nits42.userservice.request.UserCreateRequest;
-import com.github.nits42.userservice.request.UserDetailsRequest;
 import com.github.nits42.userservice.request.UserUpdateRequest;
 import com.github.nits42.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -116,7 +115,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private User findByUsername(String username) {
-        return userRepository.findByUsername(username)
+        return userRepository.findByUsernameAndStatus(username, Status.ACTIVE)
                 .orElseThrow(() -> BankingAppUserServiceException.builder()
                         .message("User not found with username: " + username)
                         .httpStatus(HttpStatus.NOT_FOUND)
@@ -124,7 +123,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private User findByEmail(String email) {
-        return userRepository.findByEmail(email)
+        return userRepository.findByEmailAndStatus(email, Status.ACTIVE)
                 .orElseThrow(() -> BankingAppUserServiceException.builder()
                         .message("User not found with email: " + email)
                         .httpStatus(HttpStatus.NOT_FOUND)
@@ -132,7 +131,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private User findById(String id) {
-        return userRepository.findById(UUID.fromString(id))
+        return userRepository.findByIdAndStatus(UUID.fromString(id), Status.ACTIVE)
                 .orElseThrow(() -> BankingAppUserServiceException.builder()
                         .message("User not found with Id: " + id)
                         .httpStatus(HttpStatus.NOT_FOUND)
