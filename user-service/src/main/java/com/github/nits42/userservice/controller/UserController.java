@@ -4,6 +4,7 @@ import com.github.nits42.userservice.dto.UserDTO;
 import com.github.nits42.userservice.request.UserCreateRequest;
 import com.github.nits42.userservice.request.UserUpdateRequest;
 import com.github.nits42.userservice.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<String> createUser(@RequestBody UserCreateRequest request) {
+    public ResponseEntity<String> createUser(@Valid @RequestBody UserCreateRequest request) {
         // Logic to create a user
         return new ResponseEntity<>(userService.createUser(request), HttpStatus.CREATED);
     }
@@ -49,7 +50,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateUser(@PathVariable String id, @RequestBody UserUpdateRequest request) {
+    public ResponseEntity<String> updateUser(@PathVariable String id, @Valid @RequestBody UserUpdateRequest request) {
         // Logic to update a user
         return new ResponseEntity<>(userService.updateUser(id, request), HttpStatus.OK);
     }

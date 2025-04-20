@@ -19,7 +19,7 @@ public class UserDetails {
     private String lastName;
 
     @Column(unique = true)
-    private Integer phoneNumber;
+    private Long phoneNumber;
     private LocalDate dateOfBirth;
     private String aboutMe;
     private String profilePicture;
