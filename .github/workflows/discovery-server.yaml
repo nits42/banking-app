@@ -19,10 +19,10 @@ jobs:
           java-version: '21'
 
       - name: Build with Maven
-        run: mvn clean install
+        run: mvn clean install discovery-server/pom.xml
 
       - name: Run tests
-        run: mvn test
+        run: mvn test discovery-server/pom.xml
 
 
 
