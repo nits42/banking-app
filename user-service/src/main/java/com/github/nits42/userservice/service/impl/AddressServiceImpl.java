@@ -50,7 +50,7 @@ public class AddressServiceImpl implements AddressService {
                 .addressType(AddressType.valueOf(request.getAddressType().toUpperCase()))
                 .build();
         address = addressRepository.save(address);
-        if(address.getId() == null)
+        if (address.getId() == null)
             throw BankingAppUserServiceException.builder()
                     .httpStatus(HttpStatus.BAD_REQUEST)
                     .message("User's address is not created")
@@ -66,29 +66,29 @@ public class AddressServiceImpl implements AddressService {
                 .orElseThrow(() ->
                         new BankingAppUserServiceException("Address not found with given id: " + id,
                                 HttpStatus.NOT_FOUND));
-        modelMapper.map(request, toUpdate);
+        this.modelMapper.map(request, toUpdate);
 
-        if(!request.getAddressType().isEmpty())
+        if (!(request.getAddressType() == null))
             toUpdate.setAddressType(AddressType.valueOf(request.getAddressType().toUpperCase()));
 
-        addressRepository.save(toUpdate);
+        this.addressRepository.save(toUpdate);
         log.info("User's address update process is completed");
         return "Address updated successfully";
     }
 
     @Override
     public List<AddressDTO> getAllAddressByUsername(String username) {
-        log.info("Fetching all addresses of user: {}",username);
+        log.info("Fetching all addresses of user: {}", username);
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() ->
                         new BankingAppUserServiceException("User not found with given username: " + username,
                                 HttpStatus.NOT_FOUND));
 
         List<Address> addressList = addressRepository.findAllByUserAndStatus(user, Status.ACTIVE);
-        if(addressList == null || addressList.isEmpty())
+        if (addressList == null || addressList.isEmpty())
             throw BankingAppUserServiceException.builder()
                     .httpStatus(HttpStatus.NOT_FOUND)
-                    .message("User's address not found with given username: "+username)
+                    .message("User's address not found with given username: " + username)
                     .build();
 
         log.info("Fetching all addresses of user {} is completed", username);
