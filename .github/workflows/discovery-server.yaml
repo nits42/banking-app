@@ -19,10 +19,10 @@ jobs:
           java-version: '21'
 
       - name: Build with Maven
-        run: mvn -B package --file /discovery-server/pom.xml
+        run: mvn -B package -f discovery-server/pom.xml
 
       - name: Run tests
-        run: mvn -B test --file /discovery-server/pom.xml
+        run: mvn -B test -f discovery-server/pom.xml
 
 
 
