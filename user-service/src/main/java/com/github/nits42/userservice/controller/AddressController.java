@@ -1,17 +1,15 @@
 package com.github.nits42.userservice.controller;
 
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import com.github.nits42.userservice.dto.AddressDTO;
 import com.github.nits42.userservice.request.AddressRequest;
 import com.github.nits42.userservice.request.AddressUpdateRequest;
 import com.github.nits42.userservice.service.AddressService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -35,7 +33,7 @@ public class AddressController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteAddress(String id) {
+    public ResponseEntity<String> deleteAddress(@PathVariable String id) {
         log.info("Address deletion process is started for: {}", id);
         return new ResponseEntity<>(addressService.deleteAddress(id), HttpStatus.OK);
     }
