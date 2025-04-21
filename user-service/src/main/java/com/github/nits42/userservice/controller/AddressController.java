@@ -4,6 +4,7 @@ import com.github.nits42.userservice.dto.AddressDTO;
 import com.github.nits42.userservice.request.AddressRequest;
 import com.github.nits42.userservice.request.AddressUpdateRequest;
 import com.github.nits42.userservice.service.AddressService;
+import com.github.nits42.userservice.swagger.apis.AddressApi;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,10 +16,19 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/v1/address")
 @RequiredArgsConstructor
-public class AddressController {
+// @Tag(name = "Address", description = "Address API related for user Address Operations")
+public class AddressController implements AddressApi {
 
     private final AddressService addressService;
 
+    /*@Operation(summary = "Create Address", description = "Create Address API")
+    @ApiResponses(value = {
+            // Add your API responses here
+            @ApiResponse(responseCode = "201", description = "Address created successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid request data"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })*/
+    @Override
     @PostMapping
     public ResponseEntity<String> createAddress(@Valid @RequestBody AddressRequest request) {
         log.info("Address creating process is started for: {}", request.getUsername());
