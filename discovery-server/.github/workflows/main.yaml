@@ -23,11 +23,13 @@ jobs:
           distribution: 'zulu'
           java-version: '21'
 
+      - name: Run tests
+        run: mvn -B test
+
       - name: Build with Maven
         run:
           mvn clean
-          mvn -B build --file pom.xml
+          mvn -B install
 
-      - name: Run tests
-        run: mvn -B test --file pom.xml
+
 
