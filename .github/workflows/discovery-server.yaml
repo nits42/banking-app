@@ -1,14 +1,9 @@
 name: Build and Deploy Banking App
 on:
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-  workflow_dispatch:
-  schedule:
-    - cron: '0 0 * * *' # Runs every day at midnight UTC
+    paths:
+      - 'api-gateway/**' # Trigger on changes in api-gateway
+
 jobs:
   build-deploy:
     name: Build and Deploy Banking App
@@ -23,13 +18,11 @@ jobs:
           distribution: 'zulu'
           java-version: '21'
 
-      - name: Run tests
-        run: mvn -B test
-
       - name: Build with Maven
-        run:
-          mvn clean
-          mvn -B install
+        run: mvn clean install
+
+      - name: Run tests
+        run: mvn test
 
 
 
