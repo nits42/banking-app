@@ -1,0 +1,35 @@
+server:
+  port: 8083
+
+eureka:
+  instance:
+    hostname: http://localhost
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${eureka.instance.hostname}:8761/eureka/
+      cache-refresh-interval: 10
+
+spring:
+  application:
+    name: AUTH-SERVICE
+
+openapi:
+  service:
+    title: user-service doc
+    contact: nitinkumar@javaverse.com
+    version: 1.0.0
+    license: 1.0.0
+    description: This is Auth Service, which is responsible for user authorization and authentication
+    url: http://localhost:8082 # api gateway url
+
+springdoc:
+  api-docs:
+    path: /auth-service/v3/api-docs
+  swagger-ui:
+    path: /auth-service/swagger-ui.html
+
+user-service:
+  url: http://localhost:8084/v1/users
