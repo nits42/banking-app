@@ -19,10 +19,10 @@ jobs:
           java-version: '21'
 
       - name: Build with Maven
-        run: mvn clean install api-gateway/pom.xml
+        run: mvn clean install --file api-gateway/pom.xml
 
       - name: Run tests
-        run: mvn test api-gateway/pom.xml
+        run: mvn test --file api-gateway/pom.xml
 
 
 
