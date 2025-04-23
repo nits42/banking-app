@@ -1,8 +1,15 @@
 name: Build and Deploy Banking App
 on:
   push:
+    branches:
+      - main
     paths:
-      - 'discovery-server/**' # Trigger on changes in discovery-server
+      - 'discovery-server/**' # Trigger on changes in feature branch for discovery-server
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'discovery-server/**' # Trigger on pull requests to main branch for discovery-server
 
 jobs:
   build-deploy:
@@ -24,5 +31,24 @@ jobs:
       - name: Run tests
         run: mvn -B test --file discovery-server/pom.xml
 
+      - name: Build Docker Image
+        uses: docker/build-push-action@v6
+        with:
+          context: discovery-server
+          file: discovery-server/Dockerfile
+          push: false
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/discovery-server:latest
 
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
+      - name: Push Docker Image
+        uses: docker/build-push-action@v6
+        with:
+          context: discovery-server
+          file: discovery-server/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/discovery-server:latest
