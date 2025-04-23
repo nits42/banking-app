@@ -2,7 +2,7 @@ name: Build and Deploy Banking App
 on:
   push:
     paths:
-      - 'discovery-server/**' # Trigger on changes in discovery-server
+      - 'auth-service/**' # Trigger on changes in auth-service
 
 jobs:
   build-deploy:
@@ -19,10 +19,10 @@ jobs:
           java-version: '21'
 
       - name: Build with Maven
-        run: mvn -B package --file discovery-server/pom.xml
+        run: mvn clean install --file auth-service/pom.xml
 
       - name: Run tests
-        run: mvn -B test --file discovery-server/pom.xml
+        run: mvn test --file auth-service/pom.xml
 
 
 

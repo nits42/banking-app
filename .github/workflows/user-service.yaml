@@ -19,10 +19,10 @@ jobs:
           java-version: '21'
 
       - name: Build with Maven
-        run: mvn clean install user-service/pom.xml
+        run: mvn clean install --file user-service/pom.xml
 
       - name: Run tests
-        run: mvn test user-service/pom.xml
+        run: mvn test --file user-service/pom.xml
 
 
 
