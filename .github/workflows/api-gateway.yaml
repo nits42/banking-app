@@ -2,7 +2,7 @@ name: Build and Deploy Banking App
 on:
   push:
     paths:
-      - 'discovery-server/**' # Trigger on changes in discovery-server
+      - 'api-gateway/**' # Trigger on changes in discovery-server
 
 jobs:
   build-deploy:
