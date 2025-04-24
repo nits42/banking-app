@@ -1,4 +1,4 @@
-name: Build and Deploy Banking App
+name: Build and Deploy Discovery Server
 on:
   push:
     branches:
@@ -24,6 +24,7 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '21'
+          cache: maven # Cache Maven dependencies
 
       - name: Build with Maven
         run: mvn -B package --file discovery-server/pom.xml
