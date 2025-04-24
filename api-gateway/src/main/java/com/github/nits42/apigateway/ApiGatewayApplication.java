@@ -8,7 +8,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @SpringBootApplication
 public class ApiGatewayApplication {
 
-    // This is the main class for the Spring Boot API Gateway application.
+    // This is the main class for the Spring Boot API-Gateway application.
     public static void main(String[] args) {
         SpringApplication.run(ApiGatewayApplication.class, args);
     }

@@ -10,7 +10,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableFeignClients
 public class AuthServiceApplication {
 
-    // This is the main class for the Spring Boot Auth Service application.
+    // This is the main class for the Spring Boot Auth-Service application.
     public static void main(String[] args) {
         SpringApplication.run(AuthServiceApplication.class, args);
     }

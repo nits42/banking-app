@@ -7,7 +7,7 @@ import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 @EnableEurekaServer
 @SpringBootApplication
 public class DiscoveryServerApplication {
-    // This is the main class for the Spring Boot Discovery Server application.
+    // This is the main class for the Spring Boot Discovery-Server application.
     public static void main(String[] args) {
         SpringApplication.run(DiscoveryServerApplication.class, args);
     }

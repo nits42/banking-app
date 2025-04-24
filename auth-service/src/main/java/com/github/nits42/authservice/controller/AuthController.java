@@ -12,11 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/v1/auth")
-//@RequiredArgsConstructor
 public class AuthController {
+    
+    private final AuthService authService;
 
     @Autowired
-    private AuthService authService;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
 
     @PostMapping
     public ResponseEntity<String> registerUser(@RequestBody AuthRequest request) {

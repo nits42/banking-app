@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-//@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
     private final RestTemplate restTemplate;
