@@ -12,8 +12,8 @@ on:
       - 'discovery-server/**' # Trigger on pull requests to main branch for discovery-server
 
 jobs:
-  build-deploy:
-    name: Build and Deploy Banking App
+  build:
+    name: Build Discovery Server
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -36,7 +36,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: discovery-server
-          file: discovery-server/Dockerfile
+          file: ./discovery-server/Dockerfile
           push: false
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/discovery-server:latest
 
@@ -50,6 +50,6 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: discovery-server
-          file: discovery-server/Dockerfile
+          file: ./discovery-server/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/discovery-server:latest

@@ -8,7 +8,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @SpringBootApplication
 public class UserServiceApplication {
 
-    // This is the main class for the Spring Boot User Service application.
+    // This is the main class for the Spring Boot User-Service application.
     public static void main(String[] args) {
         SpringApplication.run(UserServiceApplication.class, args);
     }
