@@ -36,7 +36,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: discovery-server
-          file: discovery-server/Dockerfile
+          file: ./discovery-server/Dockerfile
           push: false
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/discovery-server:latest
 
@@ -50,6 +50,6 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: discovery-server
-          file: discovery-server/Dockerfile
+          file: ./discovery-server/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/discovery-server:latest
