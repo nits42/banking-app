@@ -40,7 +40,7 @@ jobs:
       - name: Build Docker Image
         uses: docker/build-push-action@v6
         with:
-          context: discovery-server
+          #context: discovery-server
           file: ./discovery-server/Dockerfile
           push: false
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/discovery-server:latest
@@ -59,7 +59,7 @@ jobs:
       - name: Push Docker Image
         uses: docker/build-push-action@v6
         with:
-          context: discovery-server
+          #context: discovery-server
           file: ./discovery-server/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/discovery-server:latest
