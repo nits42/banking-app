@@ -1,15 +1,16 @@
 name: Build and Deploy Discovery Server
 on:
   push:
+    paths:
+      - 'discovery-server/**' # Trigger on changes in the feature branch for discovery-server
     branches:
       - main
-    paths:
-      - 'discovery-server/**' # Trigger on changes in feature branch for discovery-server
+
   pull_request:
+    paths:
+      - 'discovery-server/**' # Trigger on pull requests to the main branch for discovery-server
     branches:
       - main
-    paths:
-      - 'discovery-server/**' # Trigger on pull requests to main branch for discovery-server
 
 jobs:
   build:
@@ -53,3 +54,25 @@ jobs:
           file: ./discovery-server/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/discovery-server:latest
+
+  deploy:
+    name: Deploy to AWS ECS
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      - name: Deploy to ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: discovery-server/ecs-task-definition.json
+          service: discovery-server-service
+          cluster: discovery-server-cluster
+          wait-for-service-stability: true
