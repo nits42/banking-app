@@ -5,7 +5,7 @@ FROM openjdk:21
 WORKDIR /app
 
 # Set port number to expose
-EXPOSE 8761
+EXPOSE 8084
 
 # Author
 LABEL authors="nitin"
