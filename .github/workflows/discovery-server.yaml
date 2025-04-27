@@ -74,6 +74,6 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: discovery-server/ecs-task-definition.json
-          service: discovery-server-service
+          service: discovery-server-service-l46cmc5t
           cluster: discovery-server-cluster
           wait-for-service-stability: true

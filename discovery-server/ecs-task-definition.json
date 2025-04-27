@@ -1,66 +1,100 @@
 {
-  "family": "discovery-server",
-  "executionRoleArn": "arn:aws:iam::610081632323:role/ecsTaskExecutionRole",
-  "networkMode": "awsvpc",
-  "requiresCompatibilities": [
-    "FARGATE",
-    "EC2"
-  ],
-  "cpu": "512",
-  "memory": "1024",
+  "taskDefinitionArn": "arn:aws:ecs:ap-south-1:610081632323:task-definition/discovery-server:1",
   "containerDefinitions": [
     {
       "name": "discovery-server",
-      "image": "610081632323.dkr.ecr.ap-south-1.amazonaws.com/discovery-server:latest",
-      "essential": true,
+      "image": "610081632323.dkr.ecr.region.amazonaws.com/discovery-server:latest",
+      "cpu": 0,
       "portMappings": [
         {
+          "name": "8761",
           "containerPort": 8761,
           "hostPort": 8761,
-          "protocol": "tcp"
+          "protocol": "tcp",
+          "appProtocol": "http"
         }
       ],
+      "essential": true,
       "environment": [
-        {
-          "name": "SPRING_PROFILES_ACTIVE",
-          "value": "production"
-        },
         {
           "name": "EUREKA_INSTANCE_HOSTNAME",
           "value": "discovery-server.example.com"
+        },
+        {
+          "name": "SPRING_PROFILES_ACTIVE",
+          "value": "production"
         }
       ],
-      "healthCheck": {
-        "command": [
-          "CMD-SHELL",
-          "curl -f http://localhost:8761/actuator/health || exit 1"
-        ],
-        "interval": 30,
-        "timeout": 5,
-        "retries": 3,
-        "startPeriod": 60
-      },
+      "environmentFiles": [],
+      "mountPoints": [],
+      "volumesFrom": [],
+      "ulimits": [],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
           "awslogs-group": "/ecs/discovery-server",
+          "mode": "non-blocking",
+          "awslogs-create-group": "true",
+          "max-buffer-size": "25m",
           "awslogs-region": "ap-south-1",
           "awslogs-stream-prefix": "ecs"
-        }
+        },
+        "secretOptions": []
       },
-      "mountPoints": [],
-      "volumesFrom": [],
-      "ulimits": [
-        {
-          "name": "nofile",
-          "softLimit": 65536,
-          "hardLimit": 65536
-        }
-      ],
-      "linuxParameters": {
-        "initProcessEnabled": true
-      }
+      "systemControls": []
     }
   ],
-  "volumes": []
+  "family": "discovery-server",
+  "executionRoleArn": "arn:aws:iam::610081632323:role/ecsTaskExecutionRole",
+  "networkMode": "awsvpc",
+  "revision": 1,
+  "volumes": [],
+  "status": "ACTIVE",
+  "requiresAttributes": [
+    {
+      "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+    },
+    {
+      "name": "ecs.capability.execution-role-awslogs"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.ecr-auth"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.28"
+    },
+    {
+      "name": "ecs.capability.execution-role-ecr-pull"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+    },
+    {
+      "name": "ecs.capability.task-eni"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.29"
+    }
+  ],
+  "placementConstraints": [],
+  "compatibilities": [
+    "EC2",
+    "FARGATE"
+  ],
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "1024",
+  "memory": "3072",
+  "runtimePlatform": {
+    "cpuArchitecture": "X86_64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "registeredAt": "2025-04-26T18:32:29.554Z",
+  "registeredBy": "arn:aws:iam::610081632323:root",
+  "enableFaultInjection": false,
+  "tags": []
 }
