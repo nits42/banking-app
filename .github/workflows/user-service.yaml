@@ -12,8 +12,8 @@ on:
       - main # Trigger on pull requests to the main branch
 
 jobs:
-  build-deploy:
-    name: Build and Deploy Banking App
+  build:
+    name: Build User Service
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -54,6 +54,30 @@ jobs:
           file: ./user-service/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/user-service:latest
+
+  deploy:
+    needs: build
+    name: Deploy User Service to AWS ECS
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Deploy to ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: user-service/ecs-task-definition.json
+          service: user-service-service-2ltillfj
+          cluster: user-service-cluster
+          wait-for-service-stability: true
+          image: ${{ secrets.DOCKER_HUB_USERNAME }}/user-service:latest
 
 
 
