@@ -3,7 +3,7 @@
   "containerDefinitions": [
     {
       "name": "discovery-server",
-      "image": "${{ secrets.DOCKER_HUB_USERNAME }}/discovery-server:latest",
+      "image": "nits42/discovery-server:latest",
       "cpu": 0,
       "portMappings": [
         {
