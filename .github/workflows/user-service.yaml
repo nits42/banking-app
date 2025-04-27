@@ -75,7 +75,7 @@ jobs:
         with:
           task-definition: user-service/ecs-task-definition.json
           service: user-service-service-2ltillfj
-          cluster: user-service-cluster
+          cluster: discovery-server-cluster
           wait-for-service-stability: true
           image: ${{ secrets.DOCKER_HUB_USERNAME }}/user-service:latest
 
