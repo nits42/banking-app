@@ -17,10 +17,6 @@
       "essential": true,
       "environment": [
         {
-          "name": "EUREKA_INSTANCE_HOSTNAME",
-          "value": "discovery-server.example.com"
-        },
-        {
           "name": "SPRING_PROFILES_ACTIVE",
           "value": "production"
         }
