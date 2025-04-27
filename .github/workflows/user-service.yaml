@@ -20,7 +20,7 @@ jobs:
           cache: maven # Cache Maven dependencies
 
       - name: Build with Maven
-        run: mvn clean install --file user-service/pom.xml
+        run: mvn clean install -DskipTests --file user-service/pom.xml
 
       - name: Run tests
         run: mvn test --file user-service/pom.xml
