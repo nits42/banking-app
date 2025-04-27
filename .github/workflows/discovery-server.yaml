@@ -38,8 +38,7 @@ jobs:
         with:
           context: discovery-server
           file: ./discovery-server/Dockerfile
-          platforms:
-            - linux/amd64
+          platforms: linux/amd64
           push: false
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/discovery-server:latest
 
