@@ -16,7 +16,7 @@ spring:
 
 eureka:
   instance:
-    hostname: http://3.109.150.218
+    hostname: DISCOVERY-SERVICE
     prefer-ip-address: true
   client:
     register-with-eureka: true
