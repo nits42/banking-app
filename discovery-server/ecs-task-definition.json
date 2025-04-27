@@ -3,7 +3,7 @@
   "containerDefinitions": [
     {
       "name": "discovery-server",
-      "image": "610081632323.dkr.ecr.region.amazonaws.com/discovery-server:latest",
+      "image": "${{ secrets.DOCKER_HUB_USERNAME }}/discovery-server:latest",
       "cpu": 0,
       "portMappings": [
         {
