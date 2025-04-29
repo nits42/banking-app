@@ -2,6 +2,7 @@ package com.github.nits42.authservice.service;
 
 import com.github.nits42.authservice.clients.UserServiceFeignClient;
 import com.github.nits42.authservice.request.AuthRequest;
+import com.github.nits42.authservice.request.LoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -32,5 +33,13 @@ public class AuthServiceImpl implements AuthService {
         //PostForEntity() - return response entity (response body + headers + status code)
         //return restTemplate.postForEntity(userServiceUrl, request, String.class).getBody();
         return userServiceFeignClient.createUser(request).getBody();
+    }
+
+    @Override
+    public String login(LoginRequest request) {
+        // Implement the logic to authenticate a user
+        
+        userServiceFeignClient.getUserByUsername(request.getUsername());
+        return "";
     }
 }

@@ -1,6 +1,7 @@
 package com.github.nits42.authservice.controller;
 
 import com.github.nits42.authservice.request.AuthRequest;
+import com.github.nits42.authservice.request.LoginRequest;
 import com.github.nits42.authservice.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/v1/auth")
 public class AuthController {
-    
+
     private final AuthService authService;
 
     @Autowired
@@ -21,9 +22,14 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping
+    @PostMapping({"/register", "/signup"})
     public ResponseEntity<String> registerUser(@RequestBody AuthRequest request) {
         return new ResponseEntity<>(authService.registerUser(request), HttpStatus.CREATED);
+    }
+
+    @PostMapping({"/register", "/signup"})
+    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
+        return new ResponseEntity<>(authService.login(request), HttpStatus.OK);
     }
 
 }
