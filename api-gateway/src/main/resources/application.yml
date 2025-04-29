@@ -4,6 +4,22 @@ server:
 spring:
   application:
     name: API-GATEWAY
+  main:
+    web-application-type: reactive
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: USER-SERVICE
+          uri: lb://USER-SERVICE # load balancer
+          predicates:
+            - Path=/v1/users/**, /user-service/v3/api-docs
+        - id: AUTH-SERVICE
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/v1/auth/**, /auth-service/v3/api-docs
 
 eureka:
   instance:
@@ -15,3 +31,24 @@ eureka:
     service-url:
       defaultZone: ${eureka.instance.hostname}:8761/eureka/
       cache-refresh-interval: 10
+
+# Swagger
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    config-url: /v3/api-docs/swagger-config
+    urls:
+      - url: /v3/api-docs
+        name: API-GATEWAY
+        primaryName: API-GATEWAY
+      - url: /auth-service/v3/api-docs
+        name: Auth Service
+        primaryName: Auth Service
+      - url: /user-service/v3/api-docs
+        name: User Service
+        primaryName: User Service
+
+
