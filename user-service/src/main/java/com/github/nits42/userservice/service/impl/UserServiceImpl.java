@@ -10,12 +10,13 @@ import com.github.nits42.userservice.repository.UserRepository;
 import com.github.nits42.userservice.request.UserCreateRequest;
 import com.github.nits42.userservice.request.UserUpdateRequest;
 import com.github.nits42.userservice.service.UserService;
+import com.github.nits42.userservice.util.AppConstant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
@@ -29,38 +30,45 @@ public class UserServiceImpl implements UserService {
 
     private final ModelMapper modelMapper;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Override
     public String createUser(UserCreateRequest request) {
         log.info("User creation is started");
 
-        if(request.getUsername() == null || request.getPassword() == null || request.getEmail() == null) {
+        if (request.getUsername() == null || request.getPassword() == null || request.getEmail() == null) {
             log.error("User creation failed: Missing required fields");
             throw BankingAppUserServiceException.builder()
-                    .message("Missing required fields")
+                    .message(AppConstant.MISSING_REQUIRED_FIELD)
                     .httpStatus(HttpStatus.BAD_REQUEST)
                     .build();
         }
-        if(userRepository.existsByUsername(request.getUsername())){
+        if (userRepository.existsByUsername(request.getUsername())) {
             log.error("User creation failed: Username already exists");
             throw BankingAppUserServiceException.builder()
-                    .message("Username already exists")
+                    .message(AppConstant.USERNAME_TAKEN)
                     .httpStatus(HttpStatus.FOUND)
                     .build();
         }
-        if(userRepository.existsByEmail(request.getEmail())){
+        if (userRepository.existsByEmail(request.getEmail())) {
             log.error("User creation failed: Email already exists");
             throw BankingAppUserServiceException.builder()
-                    .message("Email already exists")
+                    .message(AppConstant.EMAIL_TAKEN)
                     .httpStatus(HttpStatus.FOUND)
                     .build();
         }
         User userEntity = convertToEntity(request);
+        userEntity.setPassword(passwordEncoder.encode(request.getPassword()));
         userEntity.setStatus(Status.ACTIVE);
-        userEntity.setRole(Role.USER);
+        if (request.getRequestFrom().equals("admin"))
+            userEntity.setRole(Role.ADMIN);
+        else {
+            userEntity.setRole(Role.USER);
+        }
         userRepository.save(userEntity);
 
         log.info("User creation is completed");
-        return "User created successfully";
+        return AppConstant.USER_CREATED;
     }
 
     @Override
@@ -101,7 +109,7 @@ public class UserServiceImpl implements UserService {
         modelMapper.map(request, userToUpdate);
         userRepository.save(userToUpdate);
         log.info("User's details update process is completed");
-        return "User updated successfully";
+        return AppConstant.USER_UPDATED;
     }
 
     @Override
@@ -111,13 +119,13 @@ public class UserServiceImpl implements UserService {
         user.setStatus(Status.DELETED);
         userRepository.save(user);
         log.info("User deletion process is completed");
-        return "User deleted successfully";
+        return AppConstant.USER_DELETED;
     }
 
     private User findByUsername(String username) {
         return userRepository.findByUsernameAndStatus(username, Status.ACTIVE)
                 .orElseThrow(() -> BankingAppUserServiceException.builder()
-                        .message("User not found with username: " + username)
+                        .message(AppConstant.USER_NOT_FOUND_BY_USERNAME + ": " + username)
                         .httpStatus(HttpStatus.NOT_FOUND)
                         .build());
     }
@@ -125,7 +133,7 @@ public class UserServiceImpl implements UserService {
     private User findByEmail(String email) {
         return userRepository.findByEmailAndStatus(email, Status.ACTIVE)
                 .orElseThrow(() -> BankingAppUserServiceException.builder()
-                        .message("User not found with email: " + email)
+                        .message(AppConstant.USER_NOT_FOUND_BY_EMAIL + ": " + email)
                         .httpStatus(HttpStatus.NOT_FOUND)
                         .build());
     }
@@ -133,7 +141,7 @@ public class UserServiceImpl implements UserService {
     private User findById(String id) {
         return userRepository.findByIdAndStatus(UUID.fromString(id), Status.ACTIVE)
                 .orElseThrow(() -> BankingAppUserServiceException.builder()
-                        .message("User not found with Id: " + id)
+                        .message(AppConstant.USER_NOT_FOUND_BY_ID + ": " + id)
                         .httpStatus(HttpStatus.NOT_FOUND)
                         .build());
     }

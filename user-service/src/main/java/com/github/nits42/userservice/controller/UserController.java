@@ -31,13 +31,13 @@ public class UserController {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable String id) {
         // Logic to get a user by ID
         return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
     }
 
-    @GetMapping("/username/{username}")
+    @GetMapping("/{username}")
     public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username) {
         // Logic to get a user by username
         return new ResponseEntity<>(userService.getUserByUsername(username), HttpStatus.OK);
@@ -60,7 +60,6 @@ public class UserController {
         // Logic to delete a user
         return new ResponseEntity<>(userService.deleteUser(id), HttpStatus.OK);
     }
-
 
 
 }
