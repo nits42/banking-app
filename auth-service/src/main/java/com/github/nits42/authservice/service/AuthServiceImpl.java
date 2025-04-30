@@ -22,7 +22,7 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override
-    public String registerUser(AuthRequest request) {
+    public String registerUser(AuthRequest request, String requestFrom) {
         // Implement the logic to register a user
         // For example, save the user details to a database
 
@@ -32,6 +32,7 @@ public class AuthServiceImpl implements AuthService {
         //PostForObject() - return only response body
         //PostForEntity() - return response entity (response body + headers + status code)
         //return restTemplate.postForEntity(userServiceUrl, request, String.class).getBody();
+        request.setRequestFrom(requestFrom);
         return userServiceFeignClient.createUser(request).getBody();
     }
 

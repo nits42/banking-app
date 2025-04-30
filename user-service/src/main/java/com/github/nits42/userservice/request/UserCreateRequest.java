@@ -33,4 +33,6 @@ public class UserCreateRequest implements Serializable {
     @Email(message = "Email should be valid")
     private String email;
 
+    private String requestFrom;
+
 }

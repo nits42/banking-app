@@ -1,6 +1,9 @@
 server:
   port: 8083
 
+security:
+  enabled: true
+
 eureka:
   instance:
     hostname: http://localhost

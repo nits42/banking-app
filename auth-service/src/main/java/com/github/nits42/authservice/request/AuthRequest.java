@@ -11,6 +11,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class AuthRequest implements Serializable {
 
+    private String requestFrom;
     private String username;
     private String password;
     private String email;

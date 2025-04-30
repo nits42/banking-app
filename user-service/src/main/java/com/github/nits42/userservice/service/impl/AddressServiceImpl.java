@@ -11,6 +11,7 @@ import com.github.nits42.userservice.repository.UserRepository;
 import com.github.nits42.userservice.request.AddressRequest;
 import com.github.nits42.userservice.request.AddressUpdateRequest;
 import com.github.nits42.userservice.service.AddressService;
+import com.github.nits42.userservice.util.AppConstant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -34,7 +35,7 @@ public class AddressServiceImpl implements AddressService {
         log.info("User's Address saving process is started");
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() ->
-                        new BankingAppUserServiceException("User not found with given username: " + request.getUsername(),
+                        new BankingAppUserServiceException(AppConstant.USER_NOT_FOUND_BY_USERNAME + ": " + request.getUsername(),
                                 HttpStatus.NOT_FOUND));
 
         Address address = Address.builder()
@@ -53,10 +54,10 @@ public class AddressServiceImpl implements AddressService {
         if (address.getId() == null)
             throw BankingAppUserServiceException.builder()
                     .httpStatus(HttpStatus.BAD_REQUEST)
-                    .message("User's address is not created")
+                    .message(AppConstant.ADDRESS_NOT_CREATED)
                     .build();
         log.info("User's Address saving process is completed");
-        return "User's address is created successfully!";
+        return AppConstant.ADDRESS_CREATED;
     }
 
     @Override
@@ -64,7 +65,7 @@ public class AddressServiceImpl implements AddressService {
         log.info("User's address update process is started");
         Address toUpdate = addressRepository.findById(UUID.fromString(id))
                 .orElseThrow(() ->
-                        new BankingAppUserServiceException("Address not found with given id: " + id,
+                        new BankingAppUserServiceException(AppConstant.ADDRESS_NOT_FOUND_BY_ID + ": " + id,
                                 HttpStatus.NOT_FOUND));
         this.modelMapper.map(request, toUpdate);
 
@@ -73,7 +74,7 @@ public class AddressServiceImpl implements AddressService {
 
         this.addressRepository.save(toUpdate);
         log.info("User's address update process is completed");
-        return "Address updated successfully";
+        return AppConstant.ADDRESS_UPDATED;
     }
 
     @Override
@@ -81,14 +82,14 @@ public class AddressServiceImpl implements AddressService {
         log.info("Fetching all addresses of user: {}", username);
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() ->
-                        new BankingAppUserServiceException("User not found with given username: " + username,
+                        new BankingAppUserServiceException(AppConstant.USER_NOT_FOUND_BY_USERNAME + ": " + username,
                                 HttpStatus.NOT_FOUND));
 
         List<Address> addressList = addressRepository.findAllByUserAndStatus(user, Status.ACTIVE);
         if (addressList == null || addressList.isEmpty())
             throw BankingAppUserServiceException.builder()
                     .httpStatus(HttpStatus.NOT_FOUND)
-                    .message("User's address not found with given username: " + username)
+                    .message(AppConstant.ADDRESS_NOT_FOUND_BY_USER_USERNAME + ": " + username)
                     .build();
 
         log.info("Fetching all addresses of user {} is completed", username);
@@ -102,7 +103,7 @@ public class AddressServiceImpl implements AddressService {
         log.info("Fetching address: {}", id);
         Address address = addressRepository.findById(UUID.fromString(id))
                 .orElseThrow(() ->
-                        new BankingAppUserServiceException("Address not found with given id: " + id,
+                        new BankingAppUserServiceException(AppConstant.ADDRESS_NOT_FOUND_BY_USER_ID + ": " + id,
                                 HttpStatus.NOT_FOUND));
 
         log.info("Fetching address is completed");
@@ -115,14 +116,14 @@ public class AddressServiceImpl implements AddressService {
 
         Address address = addressRepository.findById(UUID.fromString(id))
                 .orElseThrow(() ->
-                        new BankingAppUserServiceException("Address not found with given id: " + id,
+                        new BankingAppUserServiceException(AppConstant.ADDRESS_NOT_FOUND_BY_ID + ": " + id,
                                 HttpStatus.NOT_FOUND));
 
         address.setStatus(Status.DELETED);
         addressRepository.save(address);
 
         log.info("Address deletion is completed");
-        return "Address is deleted successfully";
+        return AppConstant.ADDRESS_DELETED;
     }
 
 }
