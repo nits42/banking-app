@@ -1,6 +1,7 @@
 package com.github.nits42.userservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.github.nits42.userservice.enums.Role;
 import lombok.*;
 
 import java.io.Serializable;
@@ -21,5 +22,5 @@ public class UserDTO implements Serializable {
     private String username;
     private String password;
     private String email;
-    private String role;
+    private Role role;
 }

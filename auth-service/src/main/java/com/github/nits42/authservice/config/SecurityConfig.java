@@ -1,6 +1,5 @@
 package com.github.nits42.authservice.config;
 
-import com.github.nits42.authservice.UnauthorizedEntryPoint;
 import com.github.nits42.authservice.security.CustomUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -22,14 +21,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @ConditionalOnProperty(value = "security.enabled", havingValue = "true", matchIfMissing = true)
 public class SecurityConfig {
 
-    private final UnauthorizedEntryPoint unauthorizedEntryPoint;
-
     private final CustomUserDetailService customUserDetailService;
 
     @Autowired
-    public SecurityConfig(UnauthorizedEntryPoint unauthorizedEntryPoint,
-                          CustomUserDetailService customUserDetailService) {
-        this.unauthorizedEntryPoint = unauthorizedEntryPoint;
+    public SecurityConfig(CustomUserDetailService customUserDetailService) {
         this.customUserDetailService = customUserDetailService;
     }
 
