@@ -34,5 +34,3 @@ springdoc:
   swagger-ui:
     path: /auth-service/swagger-ui.html
 
-user-service:
-  url: http://localhost:8084/v1/users

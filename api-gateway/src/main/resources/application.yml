@@ -16,6 +16,7 @@ spring:
           uri: lb://USER-SERVICE # load balancer
           predicates:
             - Path=/v1/users/**, /user-service/v3/api-docs
+
         - id: AUTH-SERVICE
           uri: lb://AUTH-SERVICE
           predicates:
