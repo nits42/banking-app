@@ -1,0 +1,131 @@
+openapi: 3.1.0
+info:
+  title: Banking-app
+  description: This is a sample Banking application. You can use the application to demonstrate all the different APIs and its usage.
+  termsOfService: 'http://javaverse.com/terms/'
+  license:
+    name: Java-verse License
+    url: 'http://javaverse.com/license'
+  version: 1.0.0
+  contact:
+    email: 'nitinkumar@javaverse.com'
+servers:
+  - url: "http://localhost:8082"
+    description: "Banking App Server"
+
+tags:
+  - name: "Sign Up"
+    description: "This API is used to register a new user."
+  - name: "Sign In"
+    description: "This API is used to login a user."
+
+paths:
+  /v1/auth/admin/register:
+    post:
+      tags:
+        - "Sign Up"
+      summary: "For registering a new user"
+      operationId: "registerUser"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /v1/auth/admin/signup:
+    post:
+      tags:
+        - "Sign Up"
+      summary: "For registering a new user"
+      operationId: "registerUser"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /v1/auth/login:
+    post:
+      tags:
+        - "Sign In"
+      summary: "For logging in a user"
+      operationId: "login"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TokenDTO"
+  /v1/auth/signin:
+    post:
+      tags:
+        - "Sign In"
+      summary: "For logging in a user"
+      operationId: "login"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TokenDTO"
+components:
+  schemas:
+    AuthRequest:
+      type: "object"
+      properties:
+        requestFrom:
+          type: "string"
+          nullable: true
+        username:
+          type: "string"
+          nullable: true
+        password:
+          type: "string"
+          nullable: true
+        email:
+          type: "string"
+          nullable: true
+    LoginRequest:
+      type: "object"
+      properties:
+        username:
+          type: "string"
+          nullable: true
+        password:
+          type: "string"
+          nullable: true
+    TokenDTO:
+      type: "object"
+      properties:
+        token:
+          type: "string"
+          nullable: true
+  

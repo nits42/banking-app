@@ -21,6 +21,7 @@ public class BaseEntity {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", columnDefinition = "UUID", nullable = false)
     private UUID id;
 
     @CreationTimestamp

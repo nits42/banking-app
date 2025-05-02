@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -35,7 +36,7 @@ public class UserController {
     private final ModelMapper modelMapper;
 
     private final ApplicationContext applicationContext;
-    
+
     private SecurityContextHolder securityContextHolder;
 
     @PostMapping
@@ -53,7 +54,7 @@ public class UserController {
 
     @GetMapping("/id/{id}")
     @PreAuthorize("@userService.getUserById(#id).username == principal")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable String id) {
+    public ResponseEntity<UserDTO> getUserById(@PathVariable UUID id) {
         // Logic to get a user by ID
         return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
     }
@@ -74,14 +75,14 @@ public class UserController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> updateUser(@PathVariable String id, @Valid @RequestBody UserUpdateRequest request) {
+    public ResponseEntity<String> updateUser(@PathVariable UUID id, @Valid @RequestBody UserUpdateRequest request) {
         // Logic to update a user
         return new ResponseEntity<>(userService.updateUser(id, request), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> deleteUser(@PathVariable String id) {
+    public ResponseEntity<String> deleteUser(@PathVariable UUID id) {
         // Logic to delete a user
         return new ResponseEntity<>(userService.deleteUser(id), HttpStatus.OK);
     }
@@ -103,7 +104,7 @@ public class UserController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> uploadUserProfilePhotoById(@Valid @RequestParam(value = "file") MultipartFile file,
-                                                             @PathVariable String id) {
+                                                             @PathVariable UUID id) {
         log.info("Uploading Profile photo of user: {} ", id);
         return new ResponseEntity<>(userService.uploadUserProfilePhotoById(file, id), HttpStatus.OK);
     }

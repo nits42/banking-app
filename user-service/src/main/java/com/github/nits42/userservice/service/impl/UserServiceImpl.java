@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO getUserById(String id) {
+    public UserDTO getUserById(UUID id) {
         log.info("User's details retrieval process is started with Id: {}", id);
         User user = findById(id);
         return convertToDTO(user);
@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String updateUser(String id, UserUpdateRequest request) {
+    public String updateUser(UUID id, UserUpdateRequest request) {
         log.info("User's details update process is started");
         User userToUpdate = findById(id);
 
@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String deleteUser(String id) {
+    public String deleteUser(UUID id) {
         log.info("User deletion process is started");
         User user = findById(id);
         user.setStatus(Status.DELETED);
@@ -149,8 +149,8 @@ public class UserServiceImpl implements UserService {
                         .build());
     }
 
-    private User findById(String id) {
-        return userRepository.findByIdAndStatus(UUID.fromString(id), Status.ACTIVE)
+    private User findById(UUID id) {
+        return userRepository.findByIdAndStatus(id, Status.ACTIVE)
                 .orElseThrow(() -> BankingAppUserServiceException.builder()
                         .message(AppConstant.USER_NOT_FOUND_BY_ID + ": " + id)
                         .httpStatus(HttpStatus.NOT_FOUND)
@@ -176,7 +176,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String uploadUserProfilePhotoById(MultipartFile file, String id) {
+    public String uploadUserProfilePhotoById(MultipartFile file, UUID id) {
         log.info("User's Profile photo upload process is started.");
         User toUpdate = findById(id);
         toUpdate = uploadUserProfilePhoto(toUpdate, file);
