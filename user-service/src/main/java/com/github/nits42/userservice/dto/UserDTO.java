@@ -5,6 +5,7 @@ import com.github.nits42.userservice.enums.Role;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -18,9 +19,11 @@ import java.io.Serializable;
  * It contains only the necessary fields for user registration and login.
  */
 public class UserDTO implements Serializable {
-    private String id;
+    private UUID id;
     private String username;
     private String password;
     private String email;
     private Role role;
+    private UserDetailsDTO userDetails;
+
 }

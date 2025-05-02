@@ -1,6 +1,17 @@
 server:
   port: 8082
 
+eureka:
+  instance:
+    hostname: http://localhost
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${eureka.instance.hostname}:8761/eureka/
+      cache-refresh-interval: 10
+
 spring:
   application:
     name: API-GATEWAY
@@ -16,22 +27,13 @@ spring:
           uri: lb://USER-SERVICE # load balancer
           predicates:
             - Path= /v1/users/**, /user-service/v3/api-docs
+          filters:
+            - JWTAuthenticationFilter
 
         - id: AUTH-SERVICE
           uri: lb://AUTH-SERVICE
           predicates:
-            - Path=/v1/auth/**, /v1/test/**, /auth-service/v3/api-docs
-
-eureka:
-  instance:
-    hostname: http://localhost
-    prefer-ip-address: true
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: ${eureka.instance.hostname}:8761/eureka/
-      cache-refresh-interval: 10
+            - Path=/v1/auth/**, /auth-service/v3/api-docs
 
 # Swagger
 springdoc:
@@ -45,11 +47,20 @@ springdoc:
       - url: /v3/api-docs
         name: API-GATEWAY
         primaryName: API-GATEWAY
+
       - url: /auth-service/v3/api-docs
         name: Auth Service
         primaryName: Auth Service
+
       - url: /user-service/v3/api-docs
         name: User Service
         primaryName: User Service
 
-
+# ===============================
+# = JWT TOKEN
+#   admin / secret / alg - SHA256
+# ===============================
+security:
+  jwt:
+    secret-key: 1fd849baf9cc24c3c13f83005d8c2072c844e426458480e8e9d47aea721a748c
+    expiration-time: 3600000 # 1 hour

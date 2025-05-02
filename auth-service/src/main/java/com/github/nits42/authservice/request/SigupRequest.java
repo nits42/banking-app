@@ -1,5 +1,6 @@
 package com.github.nits42.authservice.request;
 
+import com.github.nits42.authservice.enums.Role;
 import lombok.*;
 
 import java.io.Serializable;
@@ -9,11 +10,11 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthRequest implements Serializable {
+public class SigupRequest implements Serializable {
 
-    private String requestFrom;
     private String username;
     private String password;
     private String email;
+    private Role role;
 
 }

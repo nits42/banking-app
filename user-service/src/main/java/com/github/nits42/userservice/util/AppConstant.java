@@ -2,6 +2,9 @@ package com.github.nits42.userservice.util;
 
 public class AppConstant {
 
+    public static final String USER_SERVICE_BASE_URL = "/v1/users";
+    public static final String USER_SERVICE_ADDRESS_BASE_URL = "/v1/user/address";
+    public static final String FILE_STORAGE_SERVICE_BASE_URL = "/v1/file-storage";
     public static final String USERNAME_TAKEN = "Username is already taken";
     public static final String EMAIL_TAKEN = "Email is already taken";
     public static final String USER_DELETED = "User deleted successfully";
@@ -37,5 +40,16 @@ public class AppConstant {
     public static final String ADDRESS_ALREADY_EXISTS = "Address already exists";
 
     public static final String MISSING_REQUIRED_FIELD = "Missing required field: ";
+
+    public static final String AUTHORIZATION = "Authorization";
+    public static final String ISSUER = "JWT";
+    public static final String BEARER = "Bearer";
+    public static final String BEARER_AUTH = "bearerAuth";
+    public static final String JWT_BEARER = "Bearer ";
+    public static final String INVALID_TOKEN = "Invalid token";
+    public static final String TOKEN_EXPIRED = "Token is expired, Please login again!!";
+    public static final String AUTHORIZATION_HEADER_MISSING = "Authorization header is missing in request";
+    public static final String JWT_TOKEN_MISSING = "JWT Token is missing or token not start with \"Bearer\" in request";
+    public static final String ROLES = "Roles";
 
 }

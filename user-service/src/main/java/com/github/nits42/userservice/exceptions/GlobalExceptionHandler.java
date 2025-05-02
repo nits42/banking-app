@@ -1,5 +1,6 @@
 package com.github.nits42.userservice.exceptions;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -43,4 +44,31 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         errorResponse.put("error", "Request Body Can't be null");
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(WrongCredentialsException.class)
+    public ResponseEntity<?> usernameOrPasswordInvalidException(WrongCredentialsException exception) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", exception.getMessage());
+        return new ResponseEntity<>(errors, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<?> validationException(ValidationException exception) {
+        return ResponseEntity.badRequest().body(exception.getValidationErrors());
+    }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<?> invalidTokenException(InvalidTokenException exception) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", exception.getMessage());
+        return new ResponseEntity<>(errors, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<?> expiredJwtException(ExpiredJwtException exception) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", exception.getMessage());
+        return new ResponseEntity<>(errors, HttpStatus.UNAUTHORIZED);
+    }
+
 }
