@@ -35,12 +35,24 @@ openapi:
     title: user-service doc
     contact: nitinkumar@javaverse.com
     version: 1.0.0
-    license: 1.0.0
+    license-name: Java-verse License
+    license-url: http://javaverse.com/license
     description: This is User Service, which is responsible for managing user's related operations
-    url: http://localhost:8082 # api gateway url
+    server-url: http://localhost:8082 # api gateway url
+    server-description: Banking App Server
+    terms-of-service-url: http://javaverse.com/terms/
 
 springdoc:
   api-docs:
     path: /user-service/v3/api-docs
   swagger-ui:
     path: /user-service/swagger-ui.html
+
+# ===============================
+# = JWT TOKEN
+#   admin / secret / alg - SHA256
+# ===============================
+security:
+  jwt:
+    secret-key: 1fd849baf9cc24c3c13f83005d8c2072c844e426458480e8e9d47aea721a748c
+    expiration-time: 3600000 # 1 hour

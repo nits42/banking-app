@@ -22,17 +22,24 @@ public class OpenApiConfig {
             @Value("${openapi.service.version}") String version,
             @Value("${openapi.service.description}") String description,
             @Value("${openapi.service.contact}") String contact,
-            @Value("${openapi.service.license}") String license,
-            @Value("${openapi.service.url}") String url
+            @Value("${openapi.service.license-url}") String licenseUrl,
+            @Value("${openapi.service.license-name}") String licenseName,
+            @Value("${openapi.service.server-url}") String serverUrl,
+            @Value("${openapi.service.server-description}") String serverDescription,
+            @Value("${openapi.service.terms-of-service-url}") String termsOfServiceUrl
     ) {
         return new OpenAPI()
-                .servers(List.of(new Server().url(url)))
+                .servers(List.of(new Server()
+                        .url(serverUrl)
+                        .description(serverDescription))
+                )
                 .info(new Info()
                         .title(title)
                         .version(version)
                         .description(description)
                         .contact(new Contact().email(contact))
-                        .license(new License().name(license))
+                        .license(new License().name(licenseName).url(licenseUrl))
+                        .termsOfService(termsOfServiceUrl)
                 );
     }
 }

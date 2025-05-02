@@ -1,8 +1,16 @@
 server:
   port: 8083
 
+
 security:
   enabled: true
+  # ===============================
+  # = JWT TOKEN
+  #   admin / secret / alg - SHA256
+  # ===============================
+  jwt:
+    secret-key: 1fd849baf9cc24c3c13f83005d8c2072c844e426458480e8e9d47aea721a748c
+    expiration-time: 3600000 # 1 hour
 
 eureka:
   instance:
@@ -24,13 +32,15 @@ openapi:
     title: auth-service doc
     contact: nitinkumar@javaverse.com
     version: 1.0.0
-    license: 1.0.0
+    license-name: Java-verse License
+    license-url: http://javaverse.com/license
     description: This is Auth Service, which is responsible for user authorization and authentication
-    url: http://localhost:8082 # api gateway url
+    server-url: http://localhost:8082 # api gateway url
+    server-description: Banking App Server
+    terms-of-service-url: http://javaverse.com/terms/
 
 springdoc:
   api-docs:
     path: /auth-service/v3/api-docs
   swagger-ui:
     path: /auth-service/swagger-ui.html
-

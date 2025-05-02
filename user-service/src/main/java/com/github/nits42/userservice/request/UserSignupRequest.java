@@ -1,6 +1,7 @@
 package com.github.nits42.userservice.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.github.nits42.userservice.enums.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -19,7 +20,7 @@ import java.io.Serializable;
  * This class is used to transfer user data between different layers of the application.
  * It contains only the necessary fields for user registration and login.
  */
-public class UserCreateRequest implements Serializable {
+public class UserSignupRequest implements Serializable {
 
     @NotBlank(message = "Username is required")
     @Size(min = 6, message = "Username should contains at-least 6characters")
@@ -33,6 +34,6 @@ public class UserCreateRequest implements Serializable {
     @Email(message = "Email should be valid")
     private String email;
 
-    private String requestFrom;
+    private Role role;
 
 }

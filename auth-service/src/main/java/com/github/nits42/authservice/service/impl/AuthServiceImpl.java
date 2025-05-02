@@ -1,12 +1,18 @@
 package com.github.nits42.authservice.service.impl;
 
 import com.github.nits42.authservice.clients.UserServiceFeignClient;
+import com.github.nits42.authservice.dto.TokenDTO;
+import com.github.nits42.authservice.enums.Role;
 import com.github.nits42.authservice.exceptions.BankingAppAuthServiceApiException;
-import com.github.nits42.authservice.request.AuthRequest;
+import com.github.nits42.authservice.request.SigupRequest;
+import com.github.nits42.authservice.request.UserRegisterRequest;
 import com.github.nits42.authservice.request.LoginRequest;
+import com.github.nits42.authservice.security.jwt.JWTUtil;
 import com.github.nits42.authservice.service.AuthService;
 import com.github.nits42.authservice.util.AppConstant;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,11 +26,11 @@ public class AuthServiceImpl implements AuthService {
     private final RestTemplate restTemplate;
     private final UserServiceFeignClient userServiceFeignClient;
     private final AuthenticationManager authenticationManager;
-
+    private final JWTUtil jwtUtil;
 
     @Override
-    public String registerUser(AuthRequest request, String requestFrom) {
-        // Implement the logic to register a user
+    public String register(UserRegisterRequest request) {
+        // Implement the logic to register a user,
         // For example, save the user details to a database
 /*
 
@@ -35,20 +41,40 @@ public class AuthServiceImpl implements AuthService {
         PostForEntity() - return response entity (response body + headers + status code)
         return restTemplate.postForEntity(userServiceUrl, request, String.class).getBody();
 */
+        SigupRequest sigupRequest = SigupRequest.builder()
+                .username(request.getUsername())
+                .password(request.getPassword())
+                .email(request.getEmail())
+                .role(Role.ADMIN)
+                .build();
 
-        request.setRequestFrom(requestFrom);
-        return userServiceFeignClient.createUser(request).getBody();
+        // Call the user service to create a new user
+        ResponseEntity<String> response = userServiceFeignClient.createUser(sigupRequest);
+        if (response.getBody() == null) {
+            throw BankingAppAuthServiceApiException.builder()
+                    .message(AppConstant.USER_REGISTRATION_FAILED)
+                    .build();
+        }
+        return response.getBody();
     }
 
     @Override
-    public String login(LoginRequest request) {
+    public TokenDTO login(LoginRequest request, HttpServletRequest httpServletRequest) {
         // Implement the logic to authenticate a user
         Authentication authenticate = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
         if (!authenticate.isAuthenticated()) {
-            throw BankingAppAuthServiceApiException.builder().message(AppConstant.INVALID_CREDENTIALS).build();
+            throw BankingAppAuthServiceApiException.builder()
+                    .message(AppConstant.INVALID_CREDENTIALS)
+                    .build();
         }
-        return "Login successful";
+        // Generate JWT token and return it
+        var token = jwtUtil.generateToken(request.getUsername(), httpServletRequest);
+
+        return TokenDTO.builder()
+                .token(token)
+                .build();
+
     }
 }
