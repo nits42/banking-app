@@ -15,6 +15,17 @@ public class Scheduler {
 
     private final TokenRepository tokenRepository;
 
+    // Method
+
+    // To trigger the scheduler every one minute
+    // between 19:00 PM to 19:59 PM
+    //@Scheduled(cron = "0 * 19 * * ?")
+
+    // To trigger the scheduler to run every two seconds
+    //@Scheduled(fixedRate = 2000)
+
+    // To trigger the scheduler every 1 hour with
+    // an initial delay of 1 Minute.
     @Scheduled(fixedDelay = 3600000, initialDelay = 60000)
     private void updateTokenExpiredFlag() {
         long start = System.currentTimeMillis();
@@ -29,7 +40,10 @@ public class Scheduler {
                 token.setExpired(true);
         });
         tokenRepository.saveAll(tokens);
-        log.info("Schedule job to check token's expiration time is completed in {} seconds", (System.currentTimeMillis() - start) / 1000);
+        if ((System.currentTimeMillis() - start) / 1000 <= 0)
+            log.info("Schedule job to check token's expiration time is completed in {} milliseconds", (System.currentTimeMillis() - start));
+        else
+            log.info("Schedule job to check token's expiration time is completed in {} seconds", (System.currentTimeMillis() - start) / 1000);
     }
 
 }

@@ -12,17 +12,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,10 +28,6 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 public class JWTUtil {
-
-    //    TODO: 1. Add IP address to JWT - DONE
-    //    TODO: 2. Add USER_AGENT to JWT - DONE
-    //    TODO: 3. Add Logout functionality - DONE
 
     private final CustomUserDetailsService customUserDetailService;
     @Value("${security.jwt.secret-key}")
@@ -72,14 +60,6 @@ public class JWTUtil {
         // Generate a JWT token using the secret key and expiration time
         CustomUserDetails customUserDetails = (CustomUserDetails) customUserDetailService.loadUserByUsername(username);
 
-        // TODO: 4. SECURITY CONTEXT IMPLEMENTATION - DONE -- Need to remove this
-
-        // Get the WebAuthenticationDetails object from the request
-        WebAuthenticationDetails webAuthenticationDetails = new WebAuthenticationDetailsSource().buildDetails(httpServletRequest);
-
-        // Set the security context with the custom user details and web authentication details
-        setSecurityContext(webAuthenticationDetails, customUserDetails);
-
         // Create a map to hold the claims
         Map<String, Object> claims = new HashMap<>();
 
@@ -99,29 +79,6 @@ public class JWTUtil {
         claims.put(AppConstant.USER_AGENT, getUserAgent(httpServletRequest));
 
         return createToken(claims, username);
-    }
-
-    private void setSecurityContext(WebAuthenticationDetails authDetails, CustomUserDetails customUserDetails) {
-        // Get the username and roles from the custom user details
-        String username = customUserDetails.getUsername();
-        String roles = customUserDetails.getAuthorities().stream().iterator().next().getAuthority();
-        System.out.println("User's Role: " + roles);
-        final UserDetails userDetails = new User(
-                username,
-                "",
-                Collections.singleton(new SimpleGrantedAuthority(roles))
-        );
-
-        final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                userDetails.getUsername(),
-                null,
-                userDetails.getAuthorities()
-        );
-        authentication.setDetails(authDetails);
-        // After setting the Authentication in the context, we specify
-        // that the current user is authenticated. So it passes the
-        // Spring Security Configurations successfully.
-        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     private String createToken(Map<String, Object> claims, String username) throws InvalidKeyException {
