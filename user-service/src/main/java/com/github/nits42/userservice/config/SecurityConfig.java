@@ -1,6 +1,7 @@
 package com.github.nits42.userservice.config;
 
 import com.github.nits42.userservice.security.RoleCheckFilter;
+import com.github.nits42.userservice.util.AppConstant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -32,18 +34,17 @@ public class SecurityConfig {
                                 .anyRequest().permitAll()
                 ).sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                ).addFilterBefore(roleCheckFilter, UsernamePasswordAuthenticationFilter.class);
-//                .logout(logout ->
-//                                logout
-//                                        .logoutUrl("/v1/user/logout")
-////                                .addLogoutHandler(logoutHandler)
-//                                        .logoutSuccessHandler(
-//                                                (request,
-//                                                 response,
-//                                                 authentication
-//                                                ) -> SecurityContextHolder.clearContext()
-//                                        )
-//                );
+                ).addFilterBefore(roleCheckFilter, UsernamePasswordAuthenticationFilter.class)
+                .logout(logout ->
+                        logout
+                                .logoutUrl(AppConstant.LOGOUT_URL)
+                                .logoutSuccessHandler(
+                                        (request,
+                                         response,
+                                         authentication
+                                        ) -> SecurityContextHolder.clearContext()
+                                )
+                );
 
         return http.build();
     }

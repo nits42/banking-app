@@ -39,7 +39,7 @@ public class JWTUtil {
 
     //    TODO: 1. Add IP address to JWT - DONE
     //    TODO: 2. Add USER_AGENT to JWT - DONE
-    //    TODO: 3. Add Logout functionality
+    //    TODO: 3. Add Logout functionality - DONE
 
     private final CustomUserDetailsService customUserDetailService;
     @Value("${security.jwt.secret-key}")
@@ -72,7 +72,7 @@ public class JWTUtil {
         // Generate a JWT token using the secret key and expiration time
         CustomUserDetails customUserDetails = (CustomUserDetails) customUserDetailService.loadUserByUsername(username);
 
-        // TODO: 4. SECURITY CONTEXT IMPLEMENTATION - DONE
+        // TODO: 4. SECURITY CONTEXT IMPLEMENTATION - DONE -- Need to remove this
 
         // Get the WebAuthenticationDetails object from the request
         WebAuthenticationDetails webAuthenticationDetails = new WebAuthenticationDetailsSource().buildDetails(httpServletRequest);

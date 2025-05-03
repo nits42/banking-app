@@ -2,6 +2,7 @@ package com.github.nits42.authservice.clients;
 
 import com.github.nits42.authservice.dto.UserDTO;
 import com.github.nits42.authservice.request.SigupRequest;
+import com.github.nits42.authservice.request.TokenRequest;
 import com.github.nits42.authservice.util.AppConstant;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,9 @@ public interface UserServiceFeignClient {
 
     @GetMapping("/{email}")
     ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email);
+
+    @PostMapping("/token")
+    ResponseEntity<String> saveToken(@RequestBody TokenRequest request);
 
 
 }
