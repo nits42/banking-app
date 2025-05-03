@@ -26,6 +26,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,7 +36,7 @@ import java.util.UUID;
 @Slf4j
 @Service("userService")
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, LogoutHandler {
 
     private final UserRepository userRepository;
 
@@ -182,34 +183,41 @@ public class UserServiceImpl implements UserService {
         toUpdate = uploadUserProfilePhoto(toUpdate, file);
         userRepository.save(toUpdate);
         log.info("User's profile photo upload process is completed.");
-        return "User's profile photo is uploaded successfully.";
+        return AppConstant.PROFILE_PHOTO_SAVED;
     }
 
     @Override
     public byte[] downloadImageFromFileSystem(String username) {
+        log.info("User's profile photo download process is started.");
         String profilePicture = this.findByUsername(username).getUserDetails().getProfilePicture();
 
         if (profilePicture == null)
             throw BankingAppUserServiceException.builder()
-                    .message("Profile Photo is not available")
+                    .message(AppConstant.PROFILE_PHOTO_NOT_FOUND)
                     .httpStatus(HttpStatus.NOT_FOUND)
                     .build();
 
         log.info("Calling file-storage-service for retrieving user's profile photo");
         byte[] profilePhoto = fileStorageClient.getProfilePhoto(profilePicture).getBody();
         log.info("Received response from file-storage-service");
-
+        log.info("User's profile photo download process is completed.");
         return profilePhoto;
     }
 
     @Override
     public String updatePassword(UserPasswordUpdateRequest request) {
+        log.info("Password update process is started");
         User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                .orElseThrow(() ->
+                        BankingAppUserServiceException.builder()
+                                .message(String.format(AppConstant.USER_NOT_FOUND_BY_USERNAME_OR_EMAIL_OR_PASSWORD, request.getUsername()))
+                                .httpStatus(HttpStatus.NOT_FOUND)
+                                .build()
+                );
 
         if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
             throw BankingAppUserServiceException.builder()
-                    .message("Current password is incorrect")
+                    .message(AppConstant.WRONG_CURRENT_PASSWORD)
                     .httpStatus(HttpStatus.BAD_REQUEST)
                     .build();
         }
@@ -217,7 +225,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
         log.info("Password is updated successfully");
-        return "Password updated successfully";
+        return AppConstant.PASSWORD_UPDATED;
     }
 
 // FIXME - Wrong Card-Type value
@@ -261,17 +269,28 @@ public class UserServiceImpl implements UserService {
             log.info("Response from File Storage service : {}", profilePictureId);
             if (profilePictureId != null) {
                 toUpdate.getUserDetails().setProfilePicture(profilePictureId);
-                log.info("User profile photo uploading completed.");
+                log.info(AppConstant.FILE_UPLOAD_SUCCESS);
+            } else {
+                log.error(AppConstant.FILE_UPLOAD_FAILED);
+                throw BankingAppUserServiceException.builder()
+                        .message(AppConstant.FILE_UPLOAD_FAILED)
+                        .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .build();
             }
         }
+        log.info(AppConstant.FILE_UPLOAD_SUCCESS);
         return toUpdate;
     }
 
     @Override
     public String saveToken(TokenRequest request) {
+        log.info("Token saving process is started");
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("User not found with username: " + request.getUsername())
+                        BankingAppUserServiceException.builder()
+                                .message(AppConstant.USER_NOT_FOUND_BY_USERNAME_OR_EMAIL)
+                                .httpStatus(HttpStatus.NOT_FOUND)
+                                .build()
                 );
 
         revokeAllUserTokens(user);
@@ -283,46 +302,73 @@ public class UserServiceImpl implements UserService {
                 .revoked(false)
                 .build();
         tokenRepository.save(token);
-        return "Token stored successfully";
+        log.info("Token saving process is completed");
+        return AppConstant.TOKEN_SAVED;
     }
 
     private void revokeAllUserTokens(User user) {
+        log.info("Retrieving all active tokens for user: {}", user.getUsername());
         var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
         if (!validUserTokens.isEmpty()) {
-            log.info("Revoking all user tokens");
-            if (validUserTokens.size() > 0) {
+            log.info("Revoking all valid tokens for user: {}", user.getUsername());
+            if (!validUserTokens.isEmpty()) {
                 validUserTokens.forEach(token -> {
                     token.setRevoked(true);
                 });
                 tokenRepository.saveAll(validUserTokens);
             }
             tokenRepository.saveAll(validUserTokens);
+            log.info("All valid tokens revoked for user: {}", user.getUsername());
         } else
             log.info("No valid tokens found for user: {}", user.getUsername());
     }
 
     private void revokeUserToken(String token) {
+        log.info("Revoking user token");
         var validUserToken = tokenRepository.findByTokenAndExpired(token, false)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("No active token is found")
+                        BankingAppUserServiceException.builder()
+                                .message(AppConstant.ACTIVE_TOKEN_NOT_FOUND)
+                                .httpStatus(HttpStatus.NOT_FOUND)
+                                .build()
                 );
         validUserToken.setRevoked(true);
         tokenRepository.save(validUserToken);
+        log.info("User token revoked successfully");
     }
 
-    public void logout(HttpServletRequest request,
-                       HttpServletResponse response,
-                       Authentication authentication) {
-        String token = extractJwtFromRequest(request);
-        if (token != null) revokeUserToken(token);
-    }
 
     private String extractJwtFromRequest(HttpServletRequest request) {
+        log.info("Extracting JWT token from request");
+        if (request == null) {
+            log.error("Request is null");
+            throw BankingAppUserServiceException.builder()
+                    .message(AppConstant.AUTHORIZATION_HEADER_MISSING)
+                    .httpStatus(HttpStatus.BAD_REQUEST)
+                    .build();
+        }
         String bearerToken = request.getHeader(AppConstant.AUTHORIZATION);
         if (bearerToken != null && bearerToken.startsWith(AppConstant.JWT_BEARER)) {
             return bearerToken.substring(AppConstant.JWT_BEARER.length());
         }
-        return null;
+        log.error("JWT token is not found in request");
+        throw BankingAppUserServiceException.builder()
+                .message(AppConstant.JWT_TOKEN_MISSING)
+                .httpStatus(HttpStatus.BAD_REQUEST)
+                .build();
+    }
+
+    @Override
+    public void logout(HttpServletRequest request,
+                       HttpServletResponse response,
+                       Authentication authentication
+    ) {
+        log.info("Logout process is started");
+        String token = extractJwtFromRequest(request);
+
+        log.debug("Token extracted from request: {}", token);
+        revokeUserToken(token);
+        log.info("Logout process is completed");
     }
 
 }
