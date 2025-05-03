@@ -123,7 +123,6 @@ public class JWTAuthenticationFilter extends AbstractGatewayFilterFactory<JWTAut
                     .build();
         }
     }
-
     public static class Config {
         // Add configuration properties if needed
     }
