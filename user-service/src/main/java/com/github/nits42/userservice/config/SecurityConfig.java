@@ -1,6 +1,7 @@
 package com.github.nits42.userservice.config;
 
 import com.github.nits42.userservice.security.RoleCheckFilter;
+import com.github.nits42.userservice.util.AppConstant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,7 +37,7 @@ public class SecurityConfig {
                 ).addFilterBefore(roleCheckFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout ->
                         logout
-                                .logoutUrl("/v1/user/logout")
+                                .logoutUrl(AppConstant.LOGOUT_URL)
                                 .logoutSuccessHandler(
                                         (request,
                                          response,

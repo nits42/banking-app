@@ -24,6 +24,7 @@ public class AppConstant {
     public static final String USER_NOT_CREATED = "User not created";
     public static final String USER_NOT_UPDATED = "User not updated";
     public static final String USER_NOT_DELETED = "User not deleted";
+    public static final String LOGOUT_URL = "/v1/users/logout";
 
     public static final String ADDRESS_DELETED = "Address deleted successfully";
     public static final String ADDRESS_UPDATED = "Address updated successfully";

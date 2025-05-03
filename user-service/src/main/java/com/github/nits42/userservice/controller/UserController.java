@@ -8,6 +8,7 @@ import com.github.nits42.userservice.request.UserSignupRequest;
 import com.github.nits42.userservice.request.UserUpdateRequest;
 import com.github.nits42.userservice.service.UserService;
 import com.github.nits42.userservice.util.AppConstant;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping(AppConstant.USER_SERVICE_BASE_URL)
 @RequiredArgsConstructor
+@Tag(name = "User API", description = "This contains apis related to user")
 public class UserController {
 
     private final UserService userService;
