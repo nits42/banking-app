@@ -287,11 +287,18 @@ public class UserServiceImpl implements UserService {
     }
 
     private void revokeAllUserTokens(User user) {
-        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId().toString());
-        if (validUserTokens.isEmpty())
-            return;
-        validUserTokens.forEach(token -> token.setRevoked(true));
-        tokenRepository.saveAll(validUserTokens);
+        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
+        if (!validUserTokens.isEmpty()) {
+            log.info("Revoking all user tokens");
+            if (validUserTokens.size() > 0) {
+                validUserTokens.forEach(token -> {
+                    token.setRevoked(true);
+                });
+                tokenRepository.saveAll(validUserTokens);
+            }
+            tokenRepository.saveAll(validUserTokens);
+        } else
+            log.info("No valid tokens found for user: {}", user.getUsername());
     }
 
     private void revokeUserToken(String token) {

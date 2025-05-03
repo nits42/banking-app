@@ -119,7 +119,7 @@ public class UserController {
     }
 
     @PostMapping("/token")
-    ResponseEntity<String> save(@RequestBody TokenRequest request) {
+    ResponseEntity<String> saveToken(@RequestBody TokenRequest request) {
         return new ResponseEntity<>(userService.saveToken(request), HttpStatus.CREATED);
     }
 

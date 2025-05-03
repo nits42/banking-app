@@ -4,14 +4,18 @@ import com.github.nits42.authservice.clients.UserServiceFeignClient;
 import com.github.nits42.authservice.dto.TokenDTO;
 import com.github.nits42.authservice.enums.Role;
 import com.github.nits42.authservice.exceptions.BankingAppAuthServiceApiException;
-import com.github.nits42.authservice.request.SigupRequest;
-import com.github.nits42.authservice.request.UserRegisterRequest;
+import com.github.nits42.authservice.exceptions.WrongCredentialsException;
 import com.github.nits42.authservice.request.LoginRequest;
+import com.github.nits42.authservice.request.SigupRequest;
+import com.github.nits42.authservice.request.TokenRequest;
+import com.github.nits42.authservice.request.UserRegisterRequest;
 import com.github.nits42.authservice.security.jwt.JWTUtil;
 import com.github.nits42.authservice.service.AuthService;
 import com.github.nits42.authservice.util.AppConstant;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
@@ -72,9 +77,20 @@ public class AuthServiceImpl implements AuthService {
         // Generate JWT token and return it
         var token = jwtUtil.generateToken(request.getUsername(), httpServletRequest);
 
-        return TokenDTO.builder()
+        // Save the token to the user service
+        ResponseEntity<String> response = userServiceFeignClient.saveToken(TokenRequest.builder()
+                .username(request.getUsername())
                 .token(token)
-                .build();
+                .build()
+        );
+        if (response.getStatusCode().equals(HttpStatus.CREATED)) {
+            log.debug("Generated token: {}", token);
+            return TokenDTO
+                    .builder()
+                    .token(token)
+                    .build();
+        } else
+            throw new WrongCredentialsException(AppConstant.INVALID_CREDENTIALS);
 
     }
 }
