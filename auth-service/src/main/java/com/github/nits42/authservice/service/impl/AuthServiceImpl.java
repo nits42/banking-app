@@ -29,8 +29,11 @@ import org.springframework.web.client.RestTemplate;
 public class AuthServiceImpl implements AuthService {
 
     private final RestTemplate restTemplate;
+
     private final UserServiceFeignClient userServiceFeignClient;
+
     private final AuthenticationManager authenticationManager;
+
     private final JWTUtil jwtUtil;
 
     @Override
@@ -91,6 +94,5 @@ public class AuthServiceImpl implements AuthService {
                     .build();
         } else
             throw new WrongCredentialsException(AppConstant.INVALID_CREDENTIALS);
-
     }
 }

@@ -3,11 +3,13 @@ package com.github.nits42.authservice.security;
 import com.github.nits42.authservice.clients.UserServiceFeignClient;
 import com.github.nits42.authservice.util.AppConstant;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
@@ -24,8 +26,6 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException(AppConstant.USER_NOT_FOUND);
         }
         return new CustomUserDetails(userResponse);
-
-
     }
 
 }

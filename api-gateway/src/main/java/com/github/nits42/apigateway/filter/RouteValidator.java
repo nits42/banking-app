@@ -22,6 +22,14 @@ public class RouteValidator {
             AppConstant.API_DOCS_URLS,
             AppConstant.SWAGGER_UI_URLS,
             AppConstant.SWAGGER_UI_HTML_URLS,
+            AppConstant.AUTH_SERVICE_BASE_URL + "/actuator",
+            AppConstant.AUTH_SERVICE_BASE_URL + "/actuator/**",
+            AppConstant.USER_SERVICE_API_DOC_URL + "/**",
+            AppConstant.AUTH_SERVICE_API_DOC_URL + "/**",
+            AppConstant.AUTH_SERVICE_BASE_URL + "/**",
+            AppConstant.ACTUATOR_HEALTH_URL,
+            AppConstant.ACTUATOR_HEALTH_URLS,
+            AppConstant.ACTUATOR_URLS,
             AppConstant.EUREKA_URL
     );
 
