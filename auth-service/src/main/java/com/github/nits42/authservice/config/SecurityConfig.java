@@ -43,13 +43,13 @@ public class SecurityConfig {
                                 AppConstant.SWAGGER_UI_URLS,
                                 AppConstant.SWAGGER_UI_HTML_URLS,
                                 AppConstant.AUTH_SERVICE_API_DOC_URL,
+                                AppConstant.ACTUATOR_HEALTH_URL,
                                 AppConstant.EUREKA_URL
                         ).permitAll()
                         .anyRequest().authenticated()
                 ).sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 );
-
         return http.build();
     }
 

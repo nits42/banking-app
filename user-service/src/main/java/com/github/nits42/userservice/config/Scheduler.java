@@ -15,8 +15,6 @@ public class Scheduler {
 
     private final TokenRepository tokenRepository;
 
-    // Method
-
     // To trigger the scheduler every one minute
     // between 19:00 PM to 19:59 PM
     //@Scheduled(cron = "0 * 19 * * ?")

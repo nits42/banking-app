@@ -1,6 +1,9 @@
 server:
   port: 8082
 
+# =============================================
+# = EUREKA CONFIGURATION
+# =============================================
 eureka:
   instance:
     hostname: http://localhost
@@ -17,6 +20,9 @@ spring:
     name: API-GATEWAY
   main:
     web-application-type: reactive
+  # =============================================
+  # = CLOUD GATEWAY ROUTE CONFIGURATION
+  # =============================================
   cloud:
     gateway:
       discovery:
@@ -29,13 +35,25 @@ spring:
             - Path= /v1/users/**, /user-service/v3/api-docs
           filters:
             - JWTAuthenticationFilter
+            - name: CircuitBreaker
+              args:
+                name: userServiceFallback
+                fallbackUri: forward:/fallback/user-service
 
         - id: AUTH-SERVICE
           uri: lb://AUTH-SERVICE
           predicates:
             - Path=/v1/auth/**, /auth-service/v3/api-docs
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: authServiceFallback
+                fallbackUri: forward:/fallback/auth-service
 
-# Swagger
+
+# =============================================
+# = OPEN API SWAGGER CONFIGURATION
+# =============================================
 springdoc:
   api-docs:
     enabled: true
@@ -64,3 +82,42 @@ security:
   jwt:
     secret-key: 1fd849baf9cc24c3c13f83005d8c2072c844e426458480e8e9d47aea721a748c
     expiration-time: 3600000 # 1 hour
+
+
+# =============================================
+# = ACTUATOR CONFIGURATION
+# =============================================
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  health:
+    circuitbreakers:
+      enabled: true
+  info:
+    env:
+      enabled: true
+    java:
+      enabled: true
+    os:
+      enabled: true
+
+# =============================================
+# = RESILIENCE4J CIRCUIT BREAKER CONFIGURATION
+# =============================================
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        permitted-number-of-calls-in-half-open-state: 2
+        failure-rate-threshold: 50
+        register-health-indicator: true
+        event-consumer-buffer-size: 10
+        wait-duration-in-open-state: 10000ms
+        automatic-transition-from-open-to-half-open-enabled: true

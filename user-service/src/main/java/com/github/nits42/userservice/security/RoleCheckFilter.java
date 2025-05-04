@@ -33,6 +33,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RoleCheckFilter extends OncePerRequestFilter {
 
+//    TODO: Add check for token for logout
+
     private final JWTUtil jwtUtil;
 
     private static Optional<String> getJwtFromRequest(HttpServletRequest request) {
@@ -74,6 +76,7 @@ public class RoleCheckFilter extends OncePerRequestFilter {
 
         jwt.ifPresent(token -> {
             try {
+                // Validate the token
                 setSecurityContext(new WebAuthenticationDetailsSource().buildDetails(request), token);
             } catch (IllegalArgumentException | MalformedJwtException | ExpiredJwtException ex) {
                 //return onError(exchange);

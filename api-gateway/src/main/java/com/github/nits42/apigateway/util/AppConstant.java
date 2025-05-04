@@ -20,5 +20,11 @@ public class AppConstant {
     public static final String SWAGGER_UI_URLS = "/swagger-ui/**";
     public static final String SWAGGER_UI_HTML_URLS = "/swagger-ui.html";
     public static final String EUREKA_URL = "/eureka";
+    public static final String ACTUATOR_HEALTH_URL = "/actuator/health";
+    public static final String ACTUATOR_HEALTH_URLS = "/actuator/health/**";
+    public static final String ACTUATOR_URLS = "/actuator/**";
+    public static final String USER_SERVICE_UNAVAILABLE = "Sorry for inconvenience, User service is temporarily unavailable. Please try after some time!";
+    public static final String SERVICE_UNAVAILABLE = "Service is temporarily unavailable. Please try again later.";
+
 
 }
