@@ -17,20 +17,21 @@ public class Scheduler {
 
     // To trigger the scheduler every one minute
     // between 19:00 PM to 19:59 PM
-    //@Scheduled(cron = "0 * 19 * * ?")
+    // @Scheduled(cron = "0 * 19 * * ?")
 
     // To trigger the scheduler to run every two seconds
-    //@Scheduled(fixedRate = 2000)
+    // @Scheduled(fixedRate = 2000)
 
-    // To trigger the scheduler every 1 hour with
+    // To trigger the scheduler every 15 minutes with
     // an initial delay of 1 Minute.
-    @Scheduled(fixedDelay = 3600000, initialDelay = 60000)
+    @Scheduled(fixedDelay = 900000, initialDelay = 60000)
     private void updateTokenExpiredFlag() {
         long start = System.currentTimeMillis();
-        log.info("Schedule job to check token's expiration time is started");
+        log.debug("Schedule job to check token's expiration time is started");
         var tokens = tokenRepository.findByExpiredAndRevoked(false, false);
+        log.debug("Active token count: {}", tokens.size());
         if (tokens.isEmpty()) {
-            log.info("Schedule job to check token's expiration time is completed in {} seconds", (System.currentTimeMillis() - start) / 1000);
+            log.debug("No active token is found, Schedule job to check token's expiration time is completed in {} seconds", (System.currentTimeMillis() - start) / 1000);
             return;
         }
         tokens.forEach(token -> {
@@ -39,9 +40,9 @@ public class Scheduler {
         });
         tokenRepository.saveAll(tokens);
         if ((System.currentTimeMillis() - start) / 1000 <= 0)
-            log.info("Schedule job to check token's expiration time is completed in {} milliseconds", (System.currentTimeMillis() - start));
+            log.debug("Schedule job to check token's expiration time is completed in {} milliseconds", (System.currentTimeMillis() - start));
         else
-            log.info("Schedule job to check token's expiration time is completed in {} seconds", (System.currentTimeMillis() - start) / 1000);
+            log.debug("Schedule job to check token's expiration time is completed in {} seconds", (System.currentTimeMillis() - start) / 1000);
     }
 
 }
