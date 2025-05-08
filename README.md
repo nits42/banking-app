@@ -1,2 +1,3 @@
 # banking-app
-![architecture](https://github.com/user-attachments/assets/9c946c00-9f31-48ea-a205-20c1c293f510)
+![architecture](https://github.com/user-attachments/assets/67327d6d-40c1-4dec-a001-ac252187576b)
+
