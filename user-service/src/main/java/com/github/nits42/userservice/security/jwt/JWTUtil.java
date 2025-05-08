@@ -1,5 +1,6 @@
 package com.github.nits42.userservice.security.jwt;
 
+import com.github.nits42.userservice.repository.TokenRepository;
 import com.github.nits42.userservice.util.AppConstant;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
-import java.util.Date;
 import java.util.function.Function;
 
 /**
@@ -21,6 +21,7 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class JWTUtil {
 
+    private final TokenRepository jwtTokenRepository;
     @Value("${security.jwt.secret-key}")
     public String SECRET_KEY;
 
@@ -51,5 +52,10 @@ public class JWTUtil {
         return getClaimsFromToken(token, claims -> claims.get(AppConstant.ROLES, String.class));
     }
 
-
+    //Checking is a token expired or revoked
+    public boolean isTokenValid(String token) {
+        return jwtTokenRepository.findByToken(token)
+                .map(t -> !t.isExpired() && !t.isRevoked())
+                .orElse(false);
+    }
 }

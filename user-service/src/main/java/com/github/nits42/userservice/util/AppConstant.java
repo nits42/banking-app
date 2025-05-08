@@ -59,9 +59,10 @@ public class AppConstant {
     public static final String BEARER_AUTH = "bearerAuth";
     public static final String JWT_BEARER = "Bearer ";
     public static final String INVALID_TOKEN = "Invalid token";
-    public static final String TOKEN_EXPIRED = "Token is expired, Please login again!!";
+    public static final String TOKEN_EXPIRED = "Your token has expired, Please login again!!";
     public static final String AUTHORIZATION_HEADER_MISSING = "Authorization header is missing in request";
     public static final String JWT_TOKEN_MISSING = "JWT Token is missing or token not start with \"Bearer\" in request";
     public static final String ROLES = "Roles";
+    public static final String LOGOUT_ERROR = "Your token has either expired or been revoked. Please sign in again to continue.";
 
 }

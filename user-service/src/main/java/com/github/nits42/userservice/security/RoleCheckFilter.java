@@ -76,7 +76,14 @@ public class RoleCheckFilter extends OncePerRequestFilter {
 
         jwt.ifPresent(token -> {
             try {
-                // Validate the token
+                // Check whether a token has been revoked or expired
+                if (!jwtUtil.isTokenValid(token)) {
+                    log.error(AppConstant.LOGOUT_ERROR);
+                    throw BankingAppUserServiceException.builder()
+                            .message(AppConstant.LOGOUT_ERROR)
+                            .httpStatus(HttpStatus.UNAUTHORIZED)
+                            .build();
+                }
                 setSecurityContext(new WebAuthenticationDetailsSource().buildDetails(request), token);
             } catch (IllegalArgumentException | MalformedJwtException | ExpiredJwtException ex) {
                 //return onError(exchange);
