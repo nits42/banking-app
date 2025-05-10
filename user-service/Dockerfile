@@ -2,16 +2,16 @@
 FROM openjdk:21
 
 # Set the working directory
-WORKDIR /usr/app
+WORKDIR /app
 
 # Set port number to expose
-EXPOSE 8761
+EXPOSE 8084
 
 # Author
 LABEL authors="nitin"
 
 # Copy the JAR file to the container
-ADD target/discovery-server-0.0.1-SNAPSHOT.jar /usr/app/discovery-server-0.0.1-SNAPSHOT.jar
+ADD target/user-service-0.0.1-SNAPSHOT.jar /app/user-service-0.0.1-SNAPSHOT.jar
 
 # Run the application
-ENTRYPOINT [ "java","-jar","discovery-server-0.0.1-SNAPSHOT.jar" ]
+ENTRYPOINT [ "java","-jar","user-service-0.0.1-SNAPSHOT.jar" ]
