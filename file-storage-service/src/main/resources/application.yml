@@ -1,0 +1,29 @@
+server:
+  port: 8086
+
+eureka:
+  instance:
+    hostname: http://localhost
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${eureka.instance.hostname}:8761/eureka/
+      cache-refresh-interval: 10
+
+spring:
+  application:
+    name: FILE-STORAGE-SERVICE
+
+  data:
+    mongodb:
+      auto-index-creation: true
+      host: localhost
+      port: 27017
+      database: fileStorageDB
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB

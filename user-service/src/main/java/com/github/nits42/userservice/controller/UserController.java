@@ -42,6 +42,7 @@ public class UserController {
     private SecurityContextHolder securityContextHolder;
 
     @PostMapping
+    
     public ResponseEntity<String> createUser(@Valid @RequestBody UserSignupRequest request) {
         // Logic to create a user
         return new ResponseEntity<>(userService.createUser(request), HttpStatus.CREATED);
