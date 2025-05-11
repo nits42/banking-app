@@ -50,6 +50,11 @@ spring:
                 name: authServiceFallback
                 fallbackUri: forward:/fallback/auth-service
 
+        - id: CORE-BANKING-SERVICE
+          uri: lb://CORE-BANKING-SERVICE
+          predicates:
+            - Path=/v1/branch/**, /v1/account/**, /core-banking-service/v3/api-docs
+
 
 # =============================================
 # = OPEN API SWAGGER CONFIGURATION
@@ -73,6 +78,10 @@ springdoc:
       - url: /user-service/v3/api-docs
         name: User Service
         primaryName: User Service
+
+      - url: /core-banking-service/v3/api-docs
+        name: Core Banking Service
+        primaryName: Core Banking Service
 
 # ===============================
 # = JWT TOKEN

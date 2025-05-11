@@ -16,6 +16,7 @@
 
     <properties>
         <java.version>21</java.version>
+        <java.version>21</java.version>
         <spring-cloud.version>2024.0.1</spring-cloud.version>
         <spring.boot.parent.version>3.4.4</spring.boot.parent.version>
     </properties>
@@ -25,11 +26,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
-        <!--      <dependency>
-                  <groupId>org.springframework.boot</groupId>
-                  <artifactId>spring-boot-starter-data-jpa</artifactId>
-              </dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -54,13 +50,11 @@
             <optional>true</optional>
         </dependency>
 
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
 
     </dependencies>
 
