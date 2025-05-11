@@ -8,6 +8,7 @@ import com.github.nits42.userservice.request.UserSignupRequest;
 import com.github.nits42.userservice.request.UserUpdateRequest;
 import com.github.nits42.userservice.service.UserService;
 import com.github.nits42.userservice.util.AppConstant;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +43,6 @@ public class UserController {
     private SecurityContextHolder securityContextHolder;
 
     @PostMapping
-    
     public ResponseEntity<String> createUser(@Valid @RequestBody UserSignupRequest request) {
         // Logic to create a user
         return new ResponseEntity<>(userService.createUser(request), HttpStatus.CREATED);
@@ -125,6 +125,14 @@ public class UserController {
     ResponseEntity<String> saveToken(@RequestBody TokenRequest request) {
         return new ResponseEntity<>(userService.saveToken(request), HttpStatus.CREATED);
     }
+
+    @Hidden
+    @PostMapping("/createCustomer")
+    public ResponseEntity<UserDTO> createCustomer(@Valid @RequestBody UserSignupRequest request) {
+        // Logic to create a Customer
+        return new ResponseEntity<>(userService.createCustomer(request), HttpStatus.CREATED);
+    }
+
 
     @GetMapping("/getAllCards/{username}")
     public ResponseEntity<List<CardDTO>> getAllCardsByUsername(@PathVariable String username) {

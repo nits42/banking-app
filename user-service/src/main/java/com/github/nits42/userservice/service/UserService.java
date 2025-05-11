@@ -38,4 +38,5 @@ public interface UserService {
 
     String saveToken(TokenRequest request);
 
+    UserDTO createCustomer(UserSignupRequest request);
 }

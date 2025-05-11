@@ -6,6 +6,7 @@ import com.github.nits42.userservice.dto.UserDTO;
 import com.github.nits42.userservice.entities.Token;
 import com.github.nits42.userservice.entities.User;
 import com.github.nits42.userservice.entities.UserDetails;
+import com.github.nits42.userservice.enums.Role;
 import com.github.nits42.userservice.enums.Status;
 import com.github.nits42.userservice.enums.TokenType;
 import com.github.nits42.userservice.exceptions.BankingAppUserServiceException;
@@ -52,29 +53,13 @@ public class UserServiceImpl implements UserService, LogoutHandler {
     public String createUser(UserSignupRequest request) {
         log.info("User creation is started");
 
-        if (request.getUsername() == null || request.getPassword() == null || request.getEmail() == null) {
-            log.error("User creation failed: Missing required fields");
-            throw BankingAppUserServiceException.builder()
-                    .message(AppConstant.MISSING_REQUIRED_FIELD)
-                    .httpStatus(HttpStatus.BAD_REQUEST)
-                    .build();
-        }
-        if (userRepository.existsByUsername(request.getUsername())) {
-            log.error("User creation failed: Username already exists");
-            throw BankingAppUserServiceException.builder()
-                    .message(AppConstant.USERNAME_TAKEN)
-                    .httpStatus(HttpStatus.FOUND)
-                    .build();
-        }
-        if (userRepository.existsByEmail(request.getEmail())) {
-            log.error("User creation failed: Email already exists");
-            throw BankingAppUserServiceException.builder()
-                    .message(AppConstant.EMAIL_TAKEN)
-                    .httpStatus(HttpStatus.FOUND)
-                    .build();
-        }
+        isUsernamePresent(request, "User");
+        isUsernameExist(request, "User");
+        isEmailExist(request, "User");
+
         User userEntity = convertToEntity(request);
         userEntity.setPassword(passwordEncoder.encode(request.getPassword()));
+        userEntity.setRole(Role.ADMIN);
         userEntity.setStatus(Status.ACTIVE);
 
         userRepository.save(userEntity);
@@ -337,7 +322,6 @@ public class UserServiceImpl implements UserService, LogoutHandler {
         log.info("User token revoked successfully");
     }
 
-
     private String extractJwtFromRequest(HttpServletRequest request) {
         log.info("Extracting JWT token from request");
         if (request == null) {
@@ -369,6 +353,55 @@ public class UserServiceImpl implements UserService, LogoutHandler {
         log.debug("Token extracted from request: {}", token);
         revokeUserToken(token);
         log.info("Logout process is completed");
+    }
+
+    @Override
+    public UserDTO createCustomer(UserSignupRequest request) {
+        log.info("Customer creation is started");
+
+        isUsernamePresent(request, "Customer");
+        isUsernameExist(request, "Customer");
+        isEmailExist(request, "Customer");
+
+        User userEntity = convertToEntity(request);
+        userEntity.setPassword(passwordEncoder.encode(request.getPassword()));
+        userEntity.setRole(Role.USER);
+        userEntity.setStatus(Status.ACTIVE);
+
+        User savedCustomer = userRepository.save(userEntity);
+
+        log.info("Customer creation is completed");
+        return convertToDTO(savedCustomer);
+    }
+
+    private void isEmailExist(UserSignupRequest request, String type) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            log.error("{} creation failed: Email already exists", type);
+            throw BankingAppUserServiceException.builder()
+                    .message(AppConstant.EMAIL_TAKEN)
+                    .httpStatus(HttpStatus.FOUND)
+                    .build();
+        }
+    }
+
+    private void isUsernameExist(UserSignupRequest request, String type) {
+        if (userRepository.existsByUsername(request.getUsername())) {
+            log.error("{} creation failed: Username already taken", type);
+            throw BankingAppUserServiceException.builder()
+                    .message(AppConstant.USERNAME_TAKEN)
+                    .httpStatus(HttpStatus.FOUND)
+                    .build();
+        }
+    }
+
+    private void isUsernamePresent(UserSignupRequest request, String type) {
+        if (request.getUsername() == null || request.getPassword() == null || request.getEmail() == null) {
+            log.error("{} creation failed: Missing required fields", type);
+            throw BankingAppUserServiceException.builder()
+                    .message(AppConstant.MISSING_REQUIRED_FIELD)
+                    .httpStatus(HttpStatus.BAD_REQUEST)
+                    .build();
+        }
     }
 
 }
