@@ -1,0 +1,49 @@
+server:
+  port: 8087
+
+eureka:
+  instance:
+    hostname: http://localhost
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${eureka.instance.hostname}:8761/eureka/
+      cache-refresh-interval: 10
+openapi:
+  service:
+    title: atm-service doc
+    contact: nitinkumar@javaverse.com
+    version: 1.0.0
+    license-name: Java-verse License
+    license-url: http://javaverse.com/license
+    description: This is ATM Service, which is responsible for managing all atm related operations
+    server-url: http://localhost:8082 # api gateway url
+    server-description: Banking App Server
+    terms-of-service-url: http://javaverse.com/terms/
+
+springdoc:
+  api-docs:
+    path: /atm-service/v3/api-docs
+  swagger-ui:
+    path: /atm-service/swagger-ui.html
+
+spring:
+  application:
+    name: ATM-SERVICE
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bankingDB?createDatabaseIfNotExist=true&useSSL=false
+    username: postgres
+    password: System@25
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true

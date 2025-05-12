@@ -4,6 +4,7 @@ import com.github.nits42.corebankingservice.dto.AccountDTO;
 import com.github.nits42.corebankingservice.dto.TransactionDTO;
 import com.github.nits42.corebankingservice.request.*;
 import com.github.nits42.corebankingservice.service.AccountService;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class AccountController {
 
     private final AccountService accountService;
 
+    @Hidden
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> createAccount(@Valid @RequestBody AccountRequest request) {
