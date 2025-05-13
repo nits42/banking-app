@@ -1,0 +1,29 @@
+server:
+  port: 8181
+
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/nits42/bankingapp-config.git
+          default-label: main
+          clone-on-start: true
+          username: nits42
+          password: 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
+
+eureka:
+  instance:
+    hostname: http://localhost
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${eureka.instance.hostname}:8761/eureka/
+      cache-refresh-interval: 10
+
+
+

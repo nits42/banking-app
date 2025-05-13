@@ -15,20 +15,24 @@ security:
 # ===============================
 # = EUREKA CONFIGURATION
 # ===============================
-eureka:
-  instance:
-    hostname: http://localhost
-    prefer-ip-address: true
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: ${eureka.instance.hostname}:8761/eureka/
-      cache-refresh-interval: 10
+#eureka:
+#  instance:
+#    hostname: http://localhost
+#    prefer-ip-address: true
+#  client:
+#    register-with-eureka: true
+#    fetch-registry: true
+#    service-url:
+#      defaultZone: ${eureka.instance.hostname}:8761/eureka/
+#      cache-refresh-interval: 10
 
 spring:
   application:
     name: AUTH-SERVICE
+
+  # Config server
+  config:
+    import: configserver:http://localhost:8181
 
 # =============================================
 # = Open API SWAGGER CONFIGURATION
