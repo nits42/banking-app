@@ -25,6 +25,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
@@ -49,6 +51,8 @@ public class UserServiceImpl implements UserService, LogoutHandler {
 
     private final TokenRepository tokenRepository;
 
+    private final JavaMailSender emailSender;
+
     @Override
     public String createUser(UserSignupRequest request) {
         log.info("User creation is started");
@@ -65,6 +69,11 @@ public class UserServiceImpl implements UserService, LogoutHandler {
         userRepository.save(userEntity);
 
         log.info("User creation is completed");
+        sendEmail(request.getEmail(),
+                "Welcome to Banking App",
+                "Hello " + request.getUsername() + "," +
+                        "\n\nWelcome to Banking App! Your account has been created successfully." +
+                        "\n\nBest regards,\nBanking App Team");
         return AppConstant.USER_CREATED;
     }
 
@@ -404,4 +413,15 @@ public class UserServiceImpl implements UserService, LogoutHandler {
         }
     }
 
+    public void sendEmail(String toEmail, String subject, String body) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("FROM_EMAIL_ADDRESS");  // Read it from properties
+        message.setTo(toEmail);
+        message.setSubject(subject);
+        message.setText(body);
+
+        emailSender.send(message);
+
+        log.info("Message sent successfully");
+    }
 }

@@ -30,7 +30,17 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: <YOUR_EMAIL>
+    password: <YOUR_APP_PASSWORD>
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 openapi:
   service:
     title: user-service doc
@@ -57,3 +67,5 @@ security:
   jwt:
     secret-key: 1fd849baf9cc24c3c13f83005d8c2072c844e426458480e8e9d47aea721a748c
     expiration-time: 3600000 # 1 hour
+
+
