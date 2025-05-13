@@ -1,27 +1,31 @@
 server:
   port: 8086
 
-eureka:
-  instance:
-    hostname: http://localhost
-    prefer-ip-address: true
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: ${eureka.instance.hostname}:8761/eureka/
-      cache-refresh-interval: 10
+#eureka:
+#  instance:
+#    hostname: http://localhost
+#    prefer-ip-address: true
+#  client:
+#    register-with-eureka: true
+#    fetch-registry: true
+#    service-url:
+#      defaultZone: ${eureka.instance.hostname}:8761/eureka/
+#      cache-refresh-interval: 10
 
 spring:
   application:
     name: FILE-STORAGE-SERVICE
 
-  data:
-    mongodb:
-      auto-index-creation: true
-      host: localhost
-      port: 27017
-      database: fileStorageDB
+  # Config server
+  config:
+    import: configserver:http://localhost:8181
+
+  #  data:
+  #    mongodb:
+  #      auto-index-creation: true
+  #      host: localhost
+  #      port: 27017
+  #      database: fileStorageDB
 
   servlet:
     multipart:

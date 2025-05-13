@@ -1,0 +1,10 @@
+spring:
+  cloud:
+    config:
+      enable: true # Enable the config server
+      uri: http://localhost:8181 # The URI of the config server
+      fail-fast: true # Fail fast if the config server is not available
+      retry:
+        initial-interval: 1000 # Initial interval in milliseconds
+        max-interval: 2000 # Maximum interval in milliseconds
+        max-attempts: 5 # Maximum number of attempts
