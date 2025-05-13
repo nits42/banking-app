@@ -12,7 +12,7 @@ spring:
           default-label: main
           clone-on-start: true
           username: nits42
-          password: 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
+          password: { { secrets.GIT_CONFIG_REPO } }
 
 eureka:
   instance:
