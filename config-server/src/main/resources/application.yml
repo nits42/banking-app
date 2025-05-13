@@ -11,7 +11,7 @@ spring:
           uri: https://github.com/nits42/bankingapp-config.git
           default-label: main
           clone-on-start: true
-          username: nits42
+          username: { { secrets.GIT_USERNAME } }
           password: { { secrets.GIT_CONFIG_REPO } }
 
 eureka:
