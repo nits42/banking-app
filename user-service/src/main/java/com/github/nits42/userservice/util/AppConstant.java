@@ -65,4 +65,5 @@ public class AppConstant {
     public static final String ROLES = "Roles";
     public static final String LOGOUT_ERROR = "Your token has either expired or been revoked. Please sign in again to continue.";
 
+    public static final String ADDRESS_CREATION_FAILED = "Customer's address creation failed";
 }

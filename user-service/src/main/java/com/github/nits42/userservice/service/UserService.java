@@ -2,10 +2,7 @@ package com.github.nits42.userservice.service;
 
 import com.github.nits42.userservice.dto.CardDTO;
 import com.github.nits42.userservice.dto.UserDTO;
-import com.github.nits42.userservice.request.TokenRequest;
-import com.github.nits42.userservice.request.UserPasswordUpdateRequest;
-import com.github.nits42.userservice.request.UserSignupRequest;
-import com.github.nits42.userservice.request.UserUpdateRequest;
+import com.github.nits42.userservice.request.*;
 import jakarta.validation.Valid;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,5 +35,5 @@ public interface UserService {
 
     String saveToken(TokenRequest request);
 
-    UserDTO createCustomer(UserSignupRequest request);
+    UserDTO createCustomer(AccountOpeningRequest request);
 }

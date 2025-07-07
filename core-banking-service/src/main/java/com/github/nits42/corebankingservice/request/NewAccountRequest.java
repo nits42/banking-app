@@ -10,7 +10,7 @@ public class NewAccountRequest implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private UserRequest user;
-    private NewAddressRequest address;
+    private AddressRequest address;
     private AccounttRequest account;
 
 }

@@ -4,12 +4,18 @@ import com.github.nits42.corebankingservice.clients.UserServiceFeignClient;
 import com.github.nits42.corebankingservice.dto.AccountDTO;
 import com.github.nits42.corebankingservice.dto.TransactionDTO;
 import com.github.nits42.corebankingservice.entities.*;
-import com.github.nits42.corebankingservice.enums.*;
+import com.github.nits42.corebankingservice.enums.AccountType;
+import com.github.nits42.corebankingservice.enums.CardType;
+import com.github.nits42.corebankingservice.enums.Status;
+import com.github.nits42.corebankingservice.enums.TransactionType;
 import com.github.nits42.corebankingservice.exceptions.AccountNotFoundException;
 import com.github.nits42.corebankingservice.exceptions.BankingAppCoreServiceApiException;
 import com.github.nits42.corebankingservice.exceptions.CardNotFoundException;
 import com.github.nits42.corebankingservice.exceptions.TransactionNotFoundException;
-import com.github.nits42.corebankingservice.repository.*;
+import com.github.nits42.corebankingservice.repository.AccountRepository;
+import com.github.nits42.corebankingservice.repository.BranchRepository;
+import com.github.nits42.corebankingservice.repository.CardRepository;
+import com.github.nits42.corebankingservice.repository.TransactionRepository;
 import com.github.nits42.corebankingservice.request.*;
 import com.github.nits42.corebankingservice.service.AccountService;
 import com.github.nits42.corebankingservice.util.BranchUtils;
@@ -18,13 +24,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -32,15 +40,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
 
-    private final AddressRepository addressRepository;
     private final AccountRepository accountRepository;
-    private final UserRepository userRepository;
     private final CardRepository cardRepository;
     private final BranchRepository branchRepository;
     private final TransactionRepository transactionRepository;
     private final UserServiceFeignClient userService;
     private final ModelMapper modelMapper;
-    private final PasswordEncoder passwordEncoder;
 
     @Override
     public String createAccount(AccountRequest request) {
@@ -90,6 +95,12 @@ public class AccountServiceImpl implements AccountService {
     private User getUserByUsername(String userName) {
         return modelMapper.map(userService
                 .getUserByUsername(userName)
+                .getBody(), User.class);
+    }
+
+    private User getUserByEmail(String email) {
+        return modelMapper.map(userService
+                .getUserByEmail(email)
                 .getBody(), User.class);
     }
 
@@ -255,65 +266,19 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     public String openAccount(NewAccountRequest request) {
         UserRequest userRequest = request.getUser();
-        NewAddressRequest addressRequest = request.getAddress();
+        AddressRequest addressRequest = request.getAddress();
         AccounttRequest accounttRequest = request.getAccount();
 
         log.info("Account creation process is started");
-        Optional<User> userOpt = userRepository.findByUsername(userRequest.getUsername());
 
-        if (userOpt.isPresent())
-            throw BankingAppCoreServiceApiException.builder()
-                    .message(userRequest.getUsername() + " is already registered")
-                    .httpStatus(HttpStatus.BAD_REQUEST)
-                    .build();
-//        FIXME - Check customer phone number is already registered or not in DB and throw appropriate exception if present
-/*
-        Optional<User> userPh = userRepository.findByPhoneNumber(userRequest.getPhoneNumber());
-        if(userPh.isPresent())
-            throw BankingAppUserServiceApiException.builder()
-                    .message(userRequest.getPhoneNumber()+" is already registered")
-                    .httpStatus(HttpStatus.BAD_REQUEST)
-                    .build();
-*/
-        Optional<User> userEmail = userRepository.findByEmail(userRequest.getEmail());
-        if (userEmail.isPresent())
-            throw BankingAppCoreServiceApiException.builder()
-                    .message(userRequest.getEmail() + " is already registered")
-                    .httpStatus(HttpStatus.BAD_REQUEST)
-                    .build();
-
-        User user = User.builder()
-                .userDetails(UserDetails.builder()
-                        .aboutMe(userRequest.getAboutMe())
-                        .firstName(userRequest.getFirstName())
-                        .lastName(userRequest.getLastName())
-                        .dateOfBirth(LocalDate.parse(userRequest.getDateOfBirth()))
-                        .phoneNumber(userRequest.getPhoneNumber())
-                        .build()
-                )
-                .username(userRequest.getUsername())
-                .email(userRequest.getEmail())
-                .role(Role.USER)
-                .password(passwordEncoder.encode("test@123"))
-                .status(Status.ACTIVE)
+        AccountOpeningRequest accountOpeningRequest = AccountOpeningRequest.builder()
+                .addressRequest(addressRequest)
+                .userRequest(userRequest)
                 .build();
-        user = userRepository.save(user);
+        // Create Customer & their address - calling user service to create user
+        User user = modelMapper.map(userService.createCustomer(accountOpeningRequest).getBody(), User.class);
 
-        Address address = Address.builder()
-                .addressType(AddressType.valueOf(addressRequest.getAddressType().toUpperCase()))
-                .houseNumber(addressRequest.getFlatNo())
-                .streetName(addressRequest.getLine1())
-                .city(addressRequest.getCity())
-                .state(addressRequest.getState())
-                .country(addressRequest.getCountry())
-                .postalCode(addressRequest.getPostalCode())
-                .landmark(addressRequest.getLandmark())
-                .status(Status.ACTIVE)
-                .user(user)
-                .build();
-
-        addressRepository.save(address);
-
+        log.info("Customer Details are saved successfully!! Now account opening process is started");
         Account account = Account.builder()
                 .user(user)
                 .accountNumber(System.currentTimeMillis())

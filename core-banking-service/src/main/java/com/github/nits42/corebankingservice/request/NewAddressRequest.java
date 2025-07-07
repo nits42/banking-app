@@ -5,15 +5,17 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class NewAddressRequest {
+public class NewAddressRequest implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @NotBlank(message = "Flat/House no.  can't be blank")
-    private String flatNo;
+    private String houseNumber;
 
-    private String line1;
+    private String streetName;
 
     @NotBlank(message = "City can't be blank")
     private String city;

@@ -2,10 +2,7 @@ package com.github.nits42.userservice.controller;
 
 import com.github.nits42.userservice.dto.CardDTO;
 import com.github.nits42.userservice.dto.UserDTO;
-import com.github.nits42.userservice.request.TokenRequest;
-import com.github.nits42.userservice.request.UserPasswordUpdateRequest;
-import com.github.nits42.userservice.request.UserSignupRequest;
-import com.github.nits42.userservice.request.UserUpdateRequest;
+import com.github.nits42.userservice.request.*;
 import com.github.nits42.userservice.service.UserService;
 import com.github.nits42.userservice.util.AppConstant;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -128,7 +125,7 @@ public class UserController {
 
     @Hidden
     @PostMapping("/createCustomer")
-    public ResponseEntity<UserDTO> createCustomer(@Valid @RequestBody UserSignupRequest request) {
+    public ResponseEntity<UserDTO> createCustomer(@Valid @RequestBody AccountOpeningRequest request) {
         // Logic to create a Customer
         return new ResponseEntity<>(userService.createCustomer(request), HttpStatus.CREATED);
     }

@@ -1,7 +1,7 @@
 package com.github.nits42.corebankingservice.clients;
 
 import com.github.nits42.corebankingservice.dto.UserDTO;
-import com.github.nits42.corebankingservice.request.UserSignupRequest;
+import com.github.nits42.corebankingservice.request.AccountOpeningRequest;
 import com.github.nits42.corebankingservice.util.AppConstant;
 import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -23,11 +23,14 @@ import java.util.UUID;
 public interface UserServiceFeignClient {
 
     @PostMapping("/createCustomer")
-    ResponseEntity<UserDTO> createCustomer(@Valid @RequestBody UserSignupRequest request);
+    ResponseEntity<UserDTO> createCustomer(@Valid @RequestBody AccountOpeningRequest request);
 
     @GetMapping("/{username}")
-    public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username);
+    ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username);
+
+    @GetMapping("/email/{email}")
+    ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email);
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable UUID id);
+    ResponseEntity<UserDTO> getUserById(@PathVariable UUID id);
 }
